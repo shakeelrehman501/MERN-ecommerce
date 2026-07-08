@@ -1,37 +1,14 @@
 
 import { Button } from './ui/button'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ShoppingCart } from 'lucide-react'
 import { FiMenu } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { useState } from 'react';
-import { toast } from 'sonner';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '@/redux/userSlice';
 
 function Navbar() {
-  const {user} = useSelector(store=>store.user)
   const [showMenu, setShowMenu] = useState(false)
-  const accessToken = localStorage.getItem('accessToken')
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const logoutHandler = async()=>{
-      try {
-        const res = await axios.post(`http://localhost:8000/api/v1/user/logout`, {}, {
-          headers:{
-            Authorization:`Token ${accessToken}`
-          }
-        })        
-        if(res.data.success){
-          dispatch(setUser(null))
-          toast.success(res.data.message)
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Logout error")
-      }
-  }  
+  const user = true;
   return (
     <header className="top-0 bg-pink-50 fixed w-full z-20 border-b border-pink-200">
       <div className="relative max-w-7xl mx-auto flex justify-between items-center py-5 px-2">
@@ -48,7 +25,7 @@ function Navbar() {
             <Link to={"/"}><li>Home</li></Link>
             <Link to={"/products"}><li>Products</li></Link>
             {user && (
-              <Link to={"/profile"}><li>Hello, {user.firstName}</li></Link>
+              <Link to={"/profile"}><li>Hello User</li></Link>
             )}
             <div className='flex items-center justify-center md:gap-12 gap-10 '>
               <Link to={"/cart"} className="relative">
@@ -58,9 +35,9 @@ function Navbar() {
                 </span>
               </Link>
               {user ? (
-                <Button onClick={logoutHandler} className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-[18px] px-6 py-5.5">Logout</Button>
+                <Button className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-[18px] px-6 py-5.5">Logout</Button>
               ) : (
-                <Button onClick={()=>navigate('/login')} className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-[18px] px-6 py-5.5">Login</Button>
+                <Button className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-[18px] px-6 py-5.5">Login</Button>
               )}
             </div>
 
@@ -78,7 +55,7 @@ function Navbar() {
                     <Link to={"/profile"}>Hello User</Link>
                   )}
                   {user ? (
-                    <Button onClick={logoutHandler} className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-lg px-4 py-4.5">Logout</Button>
+                    <Button className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-lg px-4 py-4.5">Logout</Button>
                   ) : (
                     <Button className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-lg px-4 py-4.5">Login</Button>
                   )}

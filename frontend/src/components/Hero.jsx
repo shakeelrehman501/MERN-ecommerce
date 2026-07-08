@@ -10,8 +10,8 @@ function Hero() {
         <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4'>Latest Electronics at Best Prices</h1>
         <p className='text-xl mb-6 text-blue-100'>Discover cutting-edge technology with unbeatable deals on smartphones, laptops and more.</p>
         <div className='flex flex-col sm:flex-row gap-4'>
-          <Button className='bg-white text-blue-600 hover:bg-gray-100'>Shop Now</Button>
-          <Button variant='outline' className='border-white text-white hover:bg-white hover:text-blue-600 bg-transparent'>View Deals</Button>
+          <Button className='bg-white text-blue-600 hover:bg-gray-100 text-lg px-4 py-6'>Shop Now</Button>
+          <Button variant='outline' className='border-white text-white hover:bg-white hover:text-blue-600 bg-transparent text-lg px-4 py-6'>View Deals</Button>
         </div>
       </div>
       <div className=' flex items-center justify-center md:justify-end px-2'>

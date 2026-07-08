@@ -142,8 +142,8 @@ export const loggedIn = async (req, res) => {
       });
     }
     // Find existing User
-    const user = await User.findOne({ email });
-    if (!user) {
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
       return res.status(400).json({
         success: false,
         message: "User not existed. Please sign up first then login",
@@ -152,7 +152,7 @@ export const loggedIn = async (req, res) => {
     // Compare password
     const isPasswordValid = await bcrypt.compare(
       password,
-      user.password,
+      existingUser.password,
     );
     if (!isPasswordValid) {
       return res.status(400).json({
@@ -162,7 +162,7 @@ export const loggedIn = async (req, res) => {
     }
 
     // Check Verified is false
-    if (user.isVerified === false) {
+    if (existingUser.isVerified === false) {
       return res.status(400).json({
         success: false,
         message: "Verify your acount then login",
@@ -170,27 +170,27 @@ export const loggedIn = async (req, res) => {
     }
 
     // Generate access token
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "10d" });
-    const refreshToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "30d" },
+    const accessToken = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, { expiresIn: "10d" });
+    const refreshToken = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, { expiresIn: "30d" },
     );
     // LoggedIn true & save
-    user.isLoggedIn = true;
-    await user.save();
+    existingUser.isLoggedIn = true;
+    await existingUser.save();
     // check existing session & delete it
-    const existingSession = await Session.findOne({ userId: user._id })
+    const existingSession = await Session.findOne({ userId: existingUser._id })
     if (existingSession) {
-      await Session.deleteOne({ userId: user._id })
+      await Session.deleteOne({ userId: existingUser._id })
     }
     // Create session
-    await Session.create({ userId: user._id })
+    await Session.create({ userId: existingUser._id })
 
     // Send Success message
     return res.status(200).json({
       success: true,
-      message: `Welcome back ${user.firstName}`,
-      user: user,
-      token: token,
-      refreshToken: refreshToken,
+      message: `Welcome back ${existingUser.firstName}`,
+      user: existingUser,
+      accessToken,
+      refreshToken
     });
   } catch (error) {
     res.status(500).json({
