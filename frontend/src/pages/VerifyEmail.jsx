@@ -15,7 +15,7 @@ function VerifyEmail() {
           {},
           {
             headers: {
-              Authorization: `Token ${token}`,
+              Authorization: `token ${token}`,
             },
           }
         );

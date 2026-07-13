@@ -6,11 +6,12 @@ import Navbar from "@/components/Navbar";
 import Verify from "@/pages/Verify";
 import VerifyEmail from "@/pages/VerifyEmail";
 import Footer from "@/components/Footer";
+import Profile from "@/pages/Profile";
 
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <><Navbar /><Home /><Footer/></>
+        element: <><Navbar /><Home /><Footer /></>
     },
     {
         path: '/signup',
@@ -27,5 +28,9 @@ export const router = createBrowserRouter([
     {
         path: '/verify/:token',
         element: <VerifyEmail />
+    },
+    {
+        path: '/profile/:userId',
+        element: <><Navbar/> <Profile/></>
     },
 ])

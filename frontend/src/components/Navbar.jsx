@@ -20,7 +20,7 @@ function Navbar() {
       try {
         const res = await axios.post(`http://localhost:8000/api/v1/user/logout`, {}, {
           headers:{
-            Authorization:`Token ${accessToken}`
+            Authorization:`token ${accessToken}`
           }
         })        
         if(res.data.success){
@@ -48,7 +48,7 @@ function Navbar() {
             <Link to={"/"}><li>Home</li></Link>
             <Link to={"/products"}><li>Products</li></Link>
             {user && (
-              <Link to={"/profile"}><li>Hello, {user.firstName}</li></Link>
+              <Link to={`/profile/${user._id}`}><li>Hello, {user.firstName}</li></Link>
             )}
             <div className='flex items-center justify-center md:gap-12 gap-10 '>
               <Link to={"/cart"} className="relative">

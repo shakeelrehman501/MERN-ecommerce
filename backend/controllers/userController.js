@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { verifyEmail } from "../emailVerify/verifyEmail.js";
 import { Session } from "../models/sessionModel.js";
 import { sendOTPMail } from "../emailVerify/sendOTPMail.js";
-
+import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -32,7 +32,7 @@ export const register = async (req, res) => {
 
 
     const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY, {
-      expiresIn: "2m",
+      expiresIn: "1d",
     });
 
     verifyEmail(token, email); //Sent email here
@@ -55,7 +55,7 @@ export const register = async (req, res) => {
 export const verify = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Token ")) {
+    if (!authHeader || !authHeader.startsWith("token ")) {
       res.status(400).json({
         success: false,
         message: "Authorization token is missing or invalid",
@@ -112,7 +112,7 @@ export const reVerify = async (req, res) => {
       });
     }
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "2m",
+      expiresIn: "1d",
     });
 
     verifyEmail(token, email);
@@ -170,7 +170,7 @@ export const loggedIn = async (req, res) => {
     }
 
     // Generate access token
-    const accessToken = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, { expiresIn: "10d" });
+    const accessToken = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, { expiresIn: "1d" });
     const refreshToken = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, { expiresIn: "30d" },
     );
     // LoggedIn true & save
@@ -217,7 +217,6 @@ export const loggedOut = async (req, res) => {
     });
   }
 };
-
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -382,3 +381,103 @@ export const getUserById = async (req, res) => {
     })
   }
 }
+
+export const updateUser = async (req, res) => {
+  try {
+
+    
+    const userIdToUpdate = req.params.id //user id for update user
+    const loggedInUser = req.user //from isAuthenticated middleware
+    const { firstName, lastName, address, city, zipCode, phoneNo, role } = req.body
+
+    if (loggedInUser._id.toString() !== userIdToUpdate && loggedInUser.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to update this profile",
+      });
+    }
+    let user = await User.findById(userIdToUpdate)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    let profilePicUrl = user.profilePic
+    let profilePicPublicId = user.profilePicPublicId
+
+    // if new file is uploaded
+    if (req.file) {
+      if (profilePicPublicId) {
+        await cloudinary.uploader.destroy(profilePicPublicId)
+      }
+      
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "profiles" },
+          (error, result) => {
+            console.log("Error:", error);
+            console.log("Result:", result);
+            if (error) reject(error)
+            else resolve(result)
+          }
+        )
+        stream.end(req.file.buffer)
+      })
+
+      profilePicUrl = uploadResult.secure_url;
+      profilePicPublicId = uploadResult.public_id
+    }
+
+    //update fields
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.address = address || user.address;
+    user.city = city || user.city;
+    user.zipCode = zipCode || user.zipCode;
+    user.phoneNo = phoneNo || user.phoneNo;
+    user.role = role
+    user.profilePic = profilePicUrl
+    user.profilePicPublicId = profilePicPublicId
+
+    const updatedUser = await user.save()
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile Updated Successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    console.log("Full Error:", error);
+    console.log("Message:", error.message);
+    console.log("HTTP Code:", error.http_code);
+    console.log("Stack:", error.stack);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+
+// export const loggedOut = async (req, res) => {
+//   try {
+//    return res.status(400).json({
+//      success: false,
+//      message: "User not found",
+//    });
+//     return res.status(200).json({
+//       success: true,
+//       message: "User loggedOut successfully",
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
