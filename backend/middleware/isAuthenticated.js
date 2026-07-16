@@ -7,7 +7,7 @@ export const isAuthenticated = async (req, res, next) => {
     try {
         // Token hai? ✅
         const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('token ')) {
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(400).json({
                 success: false,
                 message: "Token is invalid or missing"

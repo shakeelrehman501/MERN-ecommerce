@@ -22,7 +22,6 @@ import axios from "axios"
 import { setUser } from "@/redux/userSlice"
 import { Loader2 } from "lucide-react"
 
-
 function Profile() {
     const [loading, setLoading] = useState(false)
     const { user } = useSelector(store => store.user)
@@ -56,8 +55,6 @@ function Profile() {
         setLoading(true)
         e.preventDefault()
         const accessToken = localStorage.getItem('accessToken')
-        
-
         try {
             // use FormData for text + file
             const formData = new FormData()
@@ -73,28 +70,23 @@ function Profile() {
             if (file) {
                 formData.append('file', file)// image file for backend multer
             }
-            
-            
-
             const res = await axios.put(`http://localhost:8000/api/v1/user/update/${userId}`, formData, {
                 headers: {
-                    Authorization: `token ${accessToken}`,
+                    Authorization: `Bearer ${accessToken}`,
                     "Content-Type": "multipart/form-data"
                 }
             })
-           
-            
-            
+
             if (res.data.success) {
                 toast.success(res.data.message)
                 dispatch(setUser(res.data.user))
             }
 
         } catch (error) {
-            
+
             console.log(error.response);
             toast.error("Failed to update profile")
-        } finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -200,7 +192,7 @@ function Profile() {
                                         </div>
                                     </div>
                                     <Button type="submit" className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 rounded-lg ">
-                                        {loading? (<><Loader2 className="w-4 h-4 mr-2 animate-spin"/>Please wait</>):('Update Profile')}
+                                        {loading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Please wait</>) : ('Update Profile')}
                                     </Button>
                                 </form>
                             </div>

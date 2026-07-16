@@ -55,7 +55,7 @@ export const register = async (req, res) => {
 export const verify = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("token ")) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       res.status(400).json({
         success: false,
         message: "Authorization token is missing or invalid",
@@ -384,8 +384,6 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-
-    
     const userIdToUpdate = req.params.id //user id for update user
     const loggedInUser = req.user //from isAuthenticated middleware
     const { firstName, lastName, address, city, zipCode, phoneNo, role } = req.body
@@ -449,11 +447,6 @@ export const updateUser = async (req, res) => {
       user: updatedUser
     });
   } catch (error) {
-    console.log("Full Error:", error);
-    console.log("Message:", error.message);
-    console.log("HTTP Code:", error.http_code);
-    console.log("Stack:", error.stack);
-
     return res.status(500).json({
       success: false,
       message: error.message,

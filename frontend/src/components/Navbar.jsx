@@ -20,7 +20,7 @@ function Navbar() {
       try {
         const res = await axios.post(`http://localhost:8000/api/v1/user/logout`, {}, {
           headers:{
-            Authorization:`token ${accessToken}`
+            Authorization:`Bearer ${accessToken}`
           }
         })        
         if(res.data.success){
