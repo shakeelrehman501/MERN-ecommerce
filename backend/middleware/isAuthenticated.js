@@ -31,8 +31,6 @@ export const isAuthenticated = async (req, res, next) => {
                 message: "Token is missing & verification failed"
             })
         }
-
-        
         // User database mein hai? ✅
         const user = await User.findById(tokenData.id)
         if (!user) {
@@ -53,12 +51,12 @@ export const isAuthenticated = async (req, res, next) => {
     }
 }
 
-export const isAdmin = (req, res, next) =>{
-    if(req.user && req.user.role === "admin"){
+export const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === "admin") {
         next()
-    } else{
+    } else {
         return res.status(403).json({
-            message:"Access denied: admin only"
+            message: "Access denied: admin only"
         })
     }
 }
