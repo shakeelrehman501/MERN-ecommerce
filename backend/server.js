@@ -23,8 +23,6 @@ app.use('/api/v1/user', userRoute)
 app.use('/api/v1/product', productRoute)
 
 
-
-
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is listening at port: ${PORT}`);

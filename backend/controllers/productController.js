@@ -115,6 +115,7 @@ export const updateProduct = async (req, res) => {
                 message: "Product not found",
             });
         }
+        
         let updatedImages = []
         //keep selected old images
         if (existingImages) {
@@ -167,6 +168,7 @@ export const updateProduct = async (req, res) => {
         });
     }
 };
+
 
 
 //  export const loggedOut = async (req, res) => {

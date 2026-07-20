@@ -1,0 +1,195 @@
+{
+               "_id": "6a5da0f1f74e686ac6dd2f28",
+               "userId": "6a579ba70a324b6647d0a315",
+               "productName": "Apple iPhone Air 512 GB: Thinnest iPhone Ever, 16.63 cm (6.5″) Display with Promotion up to 120Hz, Powerful A19 Pro Chip, Center Stage Front Camera, All-Day Battery Life; Sky Blue",
+               "productDesc": "About this item\nSUPER THIN. STRIKINGLY LIGHT — The thinnest iPhone ever, with the power of a pro chip inside. At 5.6 mm, iPhone Air is so impossibly thin and light that it nearly disappears in your hand.\nMORE DURABLE THAN ANY PREVIOUS IPHONE — Ultralight titanium frame. Ceramic Shield protects the back of iPhone Air, making it 4x more resistant to cracks. And the new Ceramic Shield 2 on the front has 3x better scratch resistance.\n18MP CENTER STAGE FRONT CAMERA — Flexible ways to frame your shot. Smarter group selfies, Dual Capture video for simultaneous front and rear recording, and more.\nTWO ADVANCED CAMERAS IN ONE — 48MP Fusion camera system with 2x Telephoto. Effortlessly frame the perfect shot from right where you are.",
+               "productImg": [
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784520943/mern_products/dssde1yjlx7p2mmmcc6b.jpg",
+                         "public_id": "mern_products/dssde1yjlx7p2mmmcc6b",
+                         "_id": "6a5da0f1f74e686ac6dd2f29"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784520944/mern_products/tldyjzofokkwor80gfc0.jpg",
+                         "public_id": "mern_products/tldyjzofokkwor80gfc0",
+                         "_id": "6a5da0f1f74e686ac6dd2f2a"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784520945/mern_products/oz1tbsgoxbe052gc0akq.jpg",
+                         "public_id": "mern_products/oz1tbsgoxbe052gc0akq",
+                         "_id": "6a5da0f1f74e686ac6dd2f2b"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784520946/mern_products/wa3nbcbos8c3ici8wzle.jpg",
+                         "public_id": "mern_products/wa3nbcbos8c3ici8wzle",
+                         "_id": "6a5da0f1f74e686ac6dd2f2c"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784520946/mern_products/zhy1fhp4e3r60u2zpevd.jpg",
+                         "public_id": "mern_products/zhy1fhp4e3r60u2zpevd",
+                         "_id": "6a5da0f1f74e686ac6dd2f2d"
+                    }
+               ],
+               "productPrice": 139900,
+               "category": "Mobile",
+               "brand": "Apple",
+               "createdAt": "2026-07-20T04:15:45.379Z",
+               "updatedAt": "2026-07-20T04:15:45.379Z",
+               "__v": 0
+          },
+          {
+               "_id": "6a5da6c2366a7cccfaeac3fc",
+               "userId": "6a579ba70a324b6647d0a315",
+               "productName": "Dell 15 AI Powered Laptop, Intel Core Ultra 5 225H, 8GB DDR5 RAM, 512GB SSD, 15.6\" FHD Anti-Glare Display, Intel Arc Graphics, Standard Keyboard, Dedicated Copilot Key, Black, Win11 Home + MSO H&S'24",
+               "productDesc": "About this item\nProcessor: AI Powered Intel Arrow Lake Core Ultra 5 225H (up to 4.90 GHz speed, 14Core)\nRAM: Storage: 8GB (1 x 8GB) / DDR5 / 5600MHz: 512 GB SSD\nDisplay: 15.6\" FHD non-touch, Graphics: Intel Arc Graphics\nKeyboard: Standard Keyboard, Software: Pre-Loaded Windows 11 Home with Lifetime Validity | MS Office Home and Student 2024 with lifetime validity| McAfee Multi Device Security 12-month subscription\nPort: 1 USB 3.2 Gen 1 Type-A port, 1 USB 3.2 Gen 2 Type-C Full Function, 1 USB Type-A 2.0 port, 1 Universal Audio port, 1 HDMI 1.4 port",
+               "productImg": [
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784522433/mern_products/amaezsgciq9oad7wtxdf.jpg",
+                         "public_id": "mern_products/amaezsgciq9oad7wtxdf",
+                         "_id": "6a5da6c2366a7cccfaeac3fd"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784522433/mern_products/g8cugv18yahbblc3gxaw.jpg",
+                         "public_id": "mern_products/g8cugv18yahbblc3gxaw",
+                         "_id": "6a5da6c2366a7cccfaeac3fe"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784522434/mern_products/urak51vvj7crjtfe63xv.jpg",
+                         "public_id": "mern_products/urak51vvj7crjtfe63xv",
+                         "_id": "6a5da6c2366a7cccfaeac3ff"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784522435/mern_products/mz0cofgbiu9xqsmn57ha.jpg",
+                         "public_id": "mern_products/mz0cofgbiu9xqsmn57ha",
+                         "_id": "6a5da6c2366a7cccfaeac400"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784522436/mern_products/k1vdi96o2owmfc9iglyr.jpg",
+                         "public_id": "mern_products/k1vdi96o2owmfc9iglyr",
+                         "_id": "6a5da6c2366a7cccfaeac401"
+                    }
+               ],
+               "productPrice": 69990,
+               "category": "Laptop",
+               "brand": "Dell",
+               "createdAt": "2026-07-20T04:40:34.632Z",
+               "updatedAt": "2026-07-20T04:40:34.632Z",
+               "__v": 0
+          },
+          {
+               "_id": "6a5da908366a7cccfaeac40c",
+               "userId": "6a579ba70a324b6647d0a315",
+               "productName": "American Tourister Dolph+ 01 | 33L Backpack | 17\" Laptop Bag | 3 Compartments | College & Office Backpack for Men and Women | Black | 1 Year Global Warranty",
+               "productDesc": "About this item\nEASY-ACCESS ORGANISER POCKETS – Designed for efficient storage and quick access to everyday essentials.\nDEDICATED DEVICE PROTECTION – Secure padded compartment keeps17 Inch laptops protected while on the move.\nROOMY INTERNAL CAPACITY – Handles heavier daily loads without compromising comfort.\nERGONOMIC DAILY COMFORT – Structured back panel and padded straps support extended wear.\nLONG-TERM ASSURANCE – Backed by a one year global warranty for dependable everyday use.",
+               "productImg": [
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523015/mern_products/mltxmrkqurobi72cswkh.jpg",
+                         "public_id": "mern_products/mltxmrkqurobi72cswkh",
+                         "_id": "6a5da908366a7cccfaeac40d"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523016/mern_products/d2rvzcd6ggodia99gxz7.jpg",
+                         "public_id": "mern_products/d2rvzcd6ggodia99gxz7",
+                         "_id": "6a5da908366a7cccfaeac40e"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523017/mern_products/xgsyvccu0hbjb5dygnqh.jpg",
+                         "public_id": "mern_products/xgsyvccu0hbjb5dygnqh",
+                         "_id": "6a5da908366a7cccfaeac40f"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523017/mern_products/kk9yb3vu6luaeteiq965.jpg",
+                         "public_id": "mern_products/kk9yb3vu6luaeteiq965",
+                         "_id": "6a5da908366a7cccfaeac410"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523018/mern_products/ht09qpocdr7leuaz9r0x.jpg",
+                         "public_id": "mern_products/ht09qpocdr7leuaz9r0x",
+                         "_id": "6a5da908366a7cccfaeac411"
+                    }
+               ],
+               "productPrice": 1199,
+               "category": "Bags",
+               "brand": "Stylo",
+               "createdAt": "2026-07-20T04:50:16.834Z",
+               "updatedAt": "2026-07-20T04:50:16.834Z",
+               "__v": 0
+          },
+          {
+               "_id": "6a5dab4c366a7cccfaeac421",
+               "userId": "6a579ba70a324b6647d0a315",
+               "productName": "pTron Studio Classic w/ 75Hrs Playtime, Wireless Over Ear Headphones w/HD Mic, Dual Device Pairing, TruTalk AI-ENC Calls, Low-Latency Game & Music, Deep Bass, BT5.4 & Type-C Charging (Black)",
+               "productDesc": "About this item\nStudio Classic Over Ear Bluetooth Headphones feature an Ergonomic Design & Soft Earpads for all-day Comfort, with an Adjustable Headband & Rotatable Earcups for a perfect fit\n75 Hours Playtime on a Single Full Charge || 40mm Neodyn Drivers for Punchy Stereo Sound Quality || Built-in HD Mic + AI-ENC for Clear Calls || Just 2 hours charge via Type-C Charging (DC5V-1A max.)\nSeamless Low-latency Gaming & Music Modes || Fast Bluetooth v5.4 Wireless Headphones with Instant Pairing || Effortless Dual-device Pairing to Connect & Switch between Two Devices anytime\nEnjoy Wireless Music via Bluetooth or Use the 3.5mm Aux-in Port || Quick Access to Voice Assistant || IPX5 Water-resistant Bluetooth Headphones built to Handle Sweat and Spills with Ease",
+               "productImg": [
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523594/mern_products/w1lat63btt7jkltqzrkw.jpg",
+                         "public_id": "mern_products/w1lat63btt7jkltqzrkw",
+                         "_id": "6a5dab4c366a7cccfaeac422"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523595/mern_products/h7cm2ss5nehgwi0i5stz.jpg",
+                         "public_id": "mern_products/h7cm2ss5nehgwi0i5stz",
+                         "_id": "6a5dab4c366a7cccfaeac423"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523595/mern_products/p9vh2hjtxxtsb6wghv2u.jpg",
+                         "public_id": "mern_products/p9vh2hjtxxtsb6wghv2u",
+                         "_id": "6a5dab4c366a7cccfaeac424"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523596/mern_products/ruyc0l5uujqycqazb2fm.jpg",
+                         "public_id": "mern_products/ruyc0l5uujqycqazb2fm",
+                         "_id": "6a5dab4c366a7cccfaeac425"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784523597/mern_products/gyq6o2ht8bpz4qqfbwru.jpg",
+                         "public_id": "mern_products/gyq6o2ht8bpz4qqfbwru",
+                         "_id": "6a5dab4c366a7cccfaeac426"
+                    }
+               ],
+               "productPrice": 11998,
+               "category": "Headphones",
+               "brand": "pTron",
+               "createdAt": "2026-07-20T04:59:56.103Z",
+               "updatedAt": "2026-07-20T04:59:56.103Z",
+               "__v": 0
+          },
+          {
+               "_id": "6a5db1176a3aa45d84e4a161",
+               "userId": "6a579ba70a324b6647d0a315",
+               "productName": "Apple iPhone 16e 128 GB: Built for Apple Intelligence, A18 Chip, Supersized Battery Life, 48MP Fusion. Camera, 15.40 cm (6.1″) Super Retina XDR Display; Black",
+               "productDesc": "About this item\nBUILT FOR APPLE INTELLIGENCE — Personal, private, powerful. Write, express yourself and get things done effortlessly.\nA18 CHIP. FAST INTO THE FUTURE — A18 chip empowers Apple Intelligence, gaming and iOS updates for years to come.\nSUPERSIZED BATTERY LIFE — Text, browse and binge movies and shows with up to 26 hours of video playback — the best battery life in a 6.1″ iPhone.\nCAMERAS — The 2-in-1 camera system has a 48MP Fusion camera for super-high-resolution photos and a 2x optical-quality Telephoto. Take incredible selfies with the 12MP front camera.\nDURABLE DESIGN. BRILLIANT DISPLAY — Stunning 15.40 cm (6.1″) Super Retina XDR display. Ceramic Shield front, tougher than any smartphone glass.",
+               "productImg": [
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784525075/mern_products/s8g9jsgxrqqnidk3zpnc.jpg",
+                         "public_id": "mern_products/s8g9jsgxrqqnidk3zpnc",
+                         "_id": "6a5db1176a3aa45d84e4a162"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784525076/mern_products/pvvii9vuk3kbh2nsq2gk.jpg",
+                         "public_id": "mern_products/pvvii9vuk3kbh2nsq2gk",
+                         "_id": "6a5db1176a3aa45d84e4a163"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784525076/mern_products/nqbsjjpzttboi6pso065.jpg",
+                         "public_id": "mern_products/nqbsjjpzttboi6pso065",
+                         "_id": "6a5db1176a3aa45d84e4a164"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784525077/mern_products/a0znjsp6yt7awujghlbg.jpg",
+                         "public_id": "mern_products/a0znjsp6yt7awujghlbg",
+                         "_id": "6a5db1176a3aa45d84e4a165"
+                    },
+                    {
+                         "url": "https://res.cloudinary.com/ohuqxrxy/image/upload/v1784525078/mern_products/of39mdchcwtne5egqjy5.jpg",
+                         "public_id": "mern_products/of39mdchcwtne5egqjy5",
+                         "_id": "6a5db1176a3aa45d84e4a166"
+                    }
+               ],
+               "productPrice": 59900,
+               "category": "Mobile",
+               "brand": "Apple",
+               "createdAt": "2026-07-20T05:24:39.385Z",
+               "updatedAt": "2026-07-20T05:24:39.385Z",
+               "__v": 0
+          }

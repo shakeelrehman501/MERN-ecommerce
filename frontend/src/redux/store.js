@@ -9,6 +9,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import  userSlice  from './userSlice'
+import productSlice from './productSlice'
 import storage from 'redux-persist/lib/storage'
 
 
@@ -18,7 +19,8 @@ const persistConfig = {
   storage:storage.default ?? storage,
 }
 const rootReducer = combineReducers({
-  user:userSlice
+  user:userSlice,
+  product:productSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
