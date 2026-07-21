@@ -8,6 +8,7 @@ import VerifyEmail from "@/pages/VerifyEmail";
 import Footer from "@/components/Footer";
 import Profile from "@/pages/Profile";
 import Products from "@/pages/Product";
+import Cart from "@/pages/Cart";
 
 export const router = createBrowserRouter([
     {
@@ -37,5 +38,9 @@ export const router = createBrowserRouter([
     {
         path: '/products',
         element: <><Navbar /> <Products /></>
+    },
+    {
+        path: '/cart',
+        element: <><Navbar /> <Cart /></>
     },
 ])

@@ -12,6 +12,7 @@ import { setUser } from '@/redux/userSlice';
 
 function Navbar() {
   const { user } = useSelector(store => store.user)
+  const {cart} = useSelector(store => store.product)
   const [showMenu, setShowMenu] = useState(false)
   const accessToken = localStorage.getItem('accessToken')
   const dispatch = useDispatch()
@@ -53,8 +54,8 @@ function Navbar() {
             <div className='flex items-center justify-center md:gap-12 gap-10 '>
               <Link to={"/cart"} className="relative">
                 <ShoppingCart />
-                <span className="bg-blue-600 rounded-full absolute text-white -top-3 -right-5 px-2">
-                  0
+                <span className="bg-blue-600 rounded-full absolute text-white -top-3 -right-5 px-2.5">
+                  {cart?.items?.length || 0}
                 </span>
               </Link>
               {user ? (
