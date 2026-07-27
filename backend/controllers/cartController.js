@@ -68,7 +68,6 @@ export const addToCart = async (req, res) => {
                 })
             }
             // Recalculate total price
-
             cart.totalPrice = cart.items.reduce(
                 (acc, item) => acc + item.price * item.quantity,
                 0
