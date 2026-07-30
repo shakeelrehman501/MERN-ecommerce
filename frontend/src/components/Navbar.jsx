@@ -13,8 +13,9 @@ import { setUser } from '@/redux/userSlice';
 function Navbar() {
   const { user } = useSelector(store => store.user)
   const {cart} = useSelector(store => store.product)
-  const [showMenu, setShowMenu] = useState(false)
   const accessToken = localStorage.getItem('accessToken')
+  const admin = user?.role === "admin" ? true : false
+  const [showMenu, setShowMenu] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const logoutHandler = async () => {
@@ -50,6 +51,9 @@ function Navbar() {
             <Link to={"/products"}><li>Products</li></Link>
             {user && (
               <Link to={`/profile/${user._id}`}><li>Hello, {user.firstName}</li></Link>
+            )}
+            {admin && (
+              <Link to={`/dashboard/sales`}><li>Dashboard</li></Link>
             )}
             <div className='flex items-center justify-center md:gap-12 gap-10 '>
               <Link to={"/cart"} className="relative">
