@@ -41,6 +41,7 @@ function Profile() {
 
     const [file, setFile] = useState(null)
     const dispatch = useDispatch()
+   
     const handleChange = (e) => {
         setUpdateUser({ ...updateUser, [e.target.name]: e.target.value })
     }

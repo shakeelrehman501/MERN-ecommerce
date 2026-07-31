@@ -371,7 +371,7 @@ export const getUserById = async (req, res) => {
       })
     }
     return res.status(200).json({
-      succes: true,
+      success: true,
       user,
     })
   } catch (error) {
