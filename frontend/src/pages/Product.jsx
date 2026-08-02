@@ -15,68 +15,100 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 function Products() {
   const { products } = useSelector((store) => store.product);
-  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showFilterbar, setShowFilterbar] = useState(false);
+
   const [search, setSearch] = useState("");
+
+  // Selected Filters
   const [category, setCategory] = useState("All");
   const [brand, setBrand] = useState("All");
+
+  // Lists
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+
   const [priceRange, setPriceRange] = useState([0, 9999999]);
   const [sortOrder, setSortOrder] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const getAllProducts = async () => {
       try {
         setLoading(true);
+
         const res = await axios.get(
-          `http://localhost:8000/api/v1/product/getallproducts`,
+          "http://localhost:8000/api/v1/product/getallproducts",
+          {
+            params: {
+              page: currentPage,
+              limit: 8,
+              search,
+              category,
+              brand,
+              minPrice: priceRange[0],
+              maxPrice: priceRange[1],
+              sort: sortOrder,
+            },
+          },
         );
+
         if (res.data.success) {
-          setAllProducts(res.data.products);
           dispatch(setProducts(res.data.products));
+          setTotalPages(res.data.totalPages);
         }
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
     };
+
     getAllProducts();
-  }, [dispatch]);
+  }, [dispatch, currentPage, search, category, brand, sortOrder, priceRange]);
 
   useEffect(() => {
-    if (allProducts.length === 0) return;
+    const getFilters = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/api/v1/product/filters",
+        );
 
-    let filtered = [...allProducts];
+        if (res.data.success) {
+          setCategories(["All", ...res.data.categories]);
+          setBrands(["All", ...res.data.brands]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-    if (search.trim() !== "") {
-      filtered = filtered.filter((p) =>
-        p.productName?.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
+    getFilters();
+  }, []);
 
-    if (category !== "All") {
-      filtered = filtered.filter((p) => p.category === category);
-    }
-
-    if (brand !== "All") {
-      filtered = filtered.filter((p) => p.brand === brand);
-    }
-
-    filtered = filtered.filter(
-      (p) => p.productPrice >= priceRange[0] && p.productPrice <= priceRange[1],
-    );
-    if (sortOrder === "lowToHigh") {
-      filtered.sort((a, b) => a.productPrice - b.productPrice);
-    } else if (sortOrder === "highToLow") {
-      filtered.sort((a, b) => b.productPrice - a.productPrice);
-    }
-    dispatch(setProducts(filtered));
-  }, [search, category, brand, sortOrder, priceRange, allProducts, dispatch]);
+  const resetFilters = () => {
+    setSearch("");
+    setCategory("All");
+    setBrand("All");
+    setPriceRange([0, 9999999]);
+    setSortOrder("");
+    setCurrentPage(1);
+  };
 
   return (
     <div className="pt-25 pb-10 px-5 flex w-full max-w-7xl mx-auto gap-7   relative">
@@ -89,19 +121,23 @@ function Products() {
           setBrand={setBrand}
           category={category}
           setCategory={setCategory}
-          allProducts={allProducts}
+          categories={categories}
+          brands={brands}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
           loading={loading}
+          setCurrentPage={setCurrentPage}
+          resetFilters={resetFilters}
         />
       </div>
       {/* Mobile filterbar */}
       {showFilterbar && (
         <>
           <div className="mt-2 md:hidden  absolute top-8 left-0 px-2 pt-8 bg-gray-100 z-10  rounded-br-sm  ">
-            <div 
-            onClick={()=>setShowFilterbar(false)}
-            className="w-7 h-7 bg-gray-600 text-gray-100 absolute right-4 top-12 z-10 rounded-full flex items-center justify-center ">
+            <div
+              onClick={() => setShowFilterbar(false)}
+              className="w-7 h-7 bg-gray-600 text-gray-100 absolute right-4 top-12 z-10 rounded-full flex items-center justify-center "
+            >
               <X className="w-5 h-5" />
             </div>
             <FilterSidebar
@@ -111,10 +147,13 @@ function Products() {
               setBrand={setBrand}
               category={category}
               setCategory={setCategory}
-              allProducts={allProducts}
+              categories={categories}
+              brands={brands}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
               loading={loading}
+              setCurrentPage={setCurrentPage}
+              resetFilters={resetFilters}
             />
           </div>
         </>
@@ -144,17 +183,73 @@ function Products() {
           </Select>
         </div>
         {/* Porduct grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {products.map((product) => {
-            return (
+        {products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <h2 className="text-2xl font-semibold text-gray-700">
+              No Products Found
+            </h2>
+
+            <p className="text-gray-500 mt-2 text-center">
+              Try adjusting your search or filter criteria.
+            </p>
+
+            <Button onClick={resetFilters} className="mt-5 bg-blue-600">
+              Reset Filters
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {products.map((product) => (
               <ProductCard
                 key={product._id}
                 product={product}
                 loading={loading}
               />
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
+        {/* Pagination */}
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() =>
+                  currentPage > 1 && setCurrentPage((prev) => prev - 1)
+                }
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }, (_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  isActive={currentPage === index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className="cursor-pointer"
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  currentPage < totalPages && setCurrentPage((prev) => prev + 1)
+                }
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

@@ -9,57 +9,51 @@ const FilterSidebar = ({
   setBrand,
   category,
   setCategory,
-  allProducts,
+  categories,
+  brands,
   priceRange,
   setPriceRange,
-  loading
+  loading,
+  setCurrentPage,
+  resetFilters
 }) => {
-  const Categories = allProducts.map((p) => p.category);
-  const UniqueCategory = ["All", ...new Set(Categories)];
-
-  const Brands = allProducts.map((p) => p.brand);
-  const UniqueBrand = ["All", ...new Set(Brands)];
-
+  
   const handleCategoryClick = (val) => {
-    setCategory(val);
+     setCategory(val);
+  setCurrentPage(1);
   };
 
   const handleBrandChange = (e) => {
     setBrand(e.target.value);
+  setCurrentPage(1);
   };
 
   const handleMinChange = (e) => {
-    const value = Number(e.target.value);
+  const value = Number(e.target.value);
 
-    if (value <= priceRange[1]) {
-      setPriceRange([value, priceRange[1]]);
-    }
-  };
+  if (value <= priceRange[1]) {
+    setPriceRange([value, priceRange[1]]);
+    setCurrentPage(1);
+  }
+};
 
   const handleMaxChange = (e) => {
-    const value = Number(e.target.value);
+  const value = Number(e.target.value);
 
-    if (value >= priceRange[0]) {
-      setPriceRange([priceRange[0], value]);
-    }
-  };
-
-  const resetFilters = () => {
-    setSearch("");
-    setCategory("All");
-    setBrand("All");
-    setPriceRange([0, 999999]);
-  };
+  if (value >= priceRange[0]) {
+    setPriceRange([priceRange[0], value]);
+    setCurrentPage(1);
+  }
+};
 
   return (
     <div className="bg-gray-100 mt-10 p-4 rounded-md h-max  w-64">
-       
       {/* Search */}
       <Input
         type="text"
         placeholder="Search..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {setSearch(e.target.value); setCurrentPage(1)}}
         className="bg-white p-2 rounded-md border-gray-400 border-2 w-full"
       />
 
@@ -68,12 +62,12 @@ const FilterSidebar = ({
 
       <div className="flex flex-col gap-2 mt-3">
         {loading ? (
-          <div className="flex justify-center items-center min-h-48">
+          <div className="flex justify-center items-center min-h-57">
             <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
           </div>
         ) : (
           <div className="flex flex-col gap-2 mt-3">
-            {UniqueCategory.map((item, index) => (
+            {categories.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 <input
                   id={item}
@@ -96,7 +90,7 @@ const FilterSidebar = ({
         onChange={handleBrandChange}
         className="bg-white w-full p-2 border-gray-200 border-2 rounded-md"
       >
-        {UniqueBrand.map((item, index) => {
+        {brands.map((item, index) => {
           return (
             <option key={index} value={item}>
               {item.toUpperCase()}
