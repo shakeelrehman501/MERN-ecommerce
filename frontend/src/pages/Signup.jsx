@@ -55,7 +55,7 @@ function Signup() {
     <div className="flex items-center justify-center bg-pink-100 min-h-screen">
       <Card className="w-full max-w-sm px-2 py-6">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
+          <CardTitle className='text-center text-2xl font-bold mb-4'>Create your account</CardTitle>
           <CardDescription>
             Enter the details below to create your account
           </CardDescription>

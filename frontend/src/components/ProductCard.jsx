@@ -35,38 +35,38 @@ const ProductCard = ({ product, loading }) => {
   };
 
   return (
-    <div className="shadow-lg rounded-lg border overflow-hidden h-max">
-      <div className="w-full h-full aspect-square overflow-hidden">
+    <div className="shadow-md rounded-lg border overflow-hidden h-max">
+      <div className="w-full h-full aspect-square overflow-hidden mb-2">
         {loading ? <Skeleton className="w-full h-full rounded-lg" /> :
           <img
           onClick={()=>navigate(`/products/${product._id}`)}
             src={productImg[0]?.url}
             alt=""
             className="w-full h-full transition-transform duration-300 hover:scale-105 cursor-pointer"
-          />
+          /> 
         }
       </div>
-      {loading ? <div className="px-2 space-y-1">
-        <Skeleton className="w-50 h-4" />
-        <Skeleton className="w-50 h-4" />
+      {loading ? <div className="p-2 space-y-2 ">
         <Skeleton className="w-50 h-8" />
+        <Skeleton className="w-50 h-4" />
+        <Skeleton className="w-50 h-4" />
       </div> :
-        <div className="px-2 space-y-1">
-          <div className="px-2">
+        <div className="px-2 space-y-3">
+          <div className="px-2 space-y-1">
 
-            <h1 className="font-semibold h-12 line-clamp-2">
+            <h1 className="text-[15px] font-semibold h-12 line-clamp-2">
 
               {productName}
             </h1>
 
             <h2 className="font-bold">
-              {productPrice}
+              Rs.{productPrice}
             </h2>
           </div>
 
           <Button 
           onClick={()=>addToCart(product._id)}
-          className="bg-blue-600 hover:bg-blue-500  mb-3 w-full">
+          className="bg-blue-600 hover:bg-blue-500  mb-3 w-full px-2">
             <ShoppingCart />
             Add to Cart
           </Button>

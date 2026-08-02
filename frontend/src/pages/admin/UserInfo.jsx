@@ -9,12 +9,13 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
+import { Images } from "@/constants/images";
 const UserInfo = () => {
   const navigate = useNavigate();
   const [updateUser, setUpdateUser] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
   const params = useParams();
   const dispatch = useDispatch();
   const userId = params.id;
@@ -30,6 +31,7 @@ const UserInfo = () => {
       ...updateUser,
       profilePic: URL.createObjectURL(selectedFile),
     }); //preview only
+    setImageLoading(true)
   };
 
   // main function
@@ -94,10 +96,10 @@ const UserInfo = () => {
   }, [userId]);
 
   return (
-    <div className="pt-5 min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 lg:-mt-20 xl:-mt-25 ">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
-          <div className="flex justify-between gap-10">
+        <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 pt-28 sm:pt-8 lg:pl-70 xl:pl-5 ">
+          <div className="flex justify-between gap-3 sm:gap-5">
             <Button onClick={() => navigate(-1)}>
               <ArrowLeft />
             </Button>
@@ -108,14 +110,22 @@ const UserInfo = () => {
           </div>
           <div className="w-full flex flex-col items-center sm:flex-row gap-10 justify-between sm:items-start px-7 max-w-2xl">
             {/* profile picture */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center relative">
+              {imageLoading && (
+                  <div className="absolute w-32 h-32 inset-0 rounded-full flex items-center justify-center border-4 border-blue-600 bg-gray-200">
+                    <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                  </div>
+                )}
               <img
-                src={updateUser?.profilePic || "/user.png"}
+                src={updateUser?.profilePic || Images.userAvator}
                 alt="profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-pink-800"
+                onLoad={()=>setImageLoading(false)}
+                className={`w-32 h-32 rounded-full object-cover border-4 border-blue-600
+                  ${imageLoading ? "opacity-0" : "opacity-100"}
+                  `}
               />
               {/* <img src="/shakeel.png" alt="profile" className='w-32 h-32 rounded-full object-cover border-4 border-pink-800' /> */}
-              <Label className="mt-4 cursor-pointer bg-pink-600 text-white whitespace-nowrap px-4 py-2 rounded hover:bg-pink-700">
+              <Label className="mt-4 cursor-pointer bg-blue-600 text-white whitespace-nowrap px-4 py-2 rounded hover:bg-pink-700">
                 Change Picture
                 <input
                   type="file"

@@ -46,7 +46,7 @@ const AdminProduct = () => {
   const [editProduct, setEditProduct] = useState(null);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("")
+  const [sortOrder, setSortOrder] = useState("");
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
 
@@ -57,11 +57,15 @@ const AdminProduct = () => {
       product.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  if(sortOrder === 'lowToHigh'){
-    filteredProducts = [...filteredProducts].sort((a, b)=> a.productPrice - b.productPrice)
+  if (sortOrder === "lowToHigh") {
+    filteredProducts = [...filteredProducts].sort(
+      (a, b) => a.productPrice - b.productPrice,
+    );
   }
-  if(sortOrder === 'highToLow'){
-    filteredProducts = [...filteredProducts].sort((a, b)=> b.productPrice - a.productPrice)
+  if (sortOrder === "highToLow") {
+    filteredProducts = [...filteredProducts].sort(
+      (a, b) => b.productPrice - a.productPrice,
+    );
   }
 
   const handleChange = (e) => {
@@ -147,20 +151,20 @@ const AdminProduct = () => {
   };
 
   return (
-    <div className="pl-88 py-20 pr-20 flex flex-col gap-3 min-h-screen bg-gray-100">
-      <div className="flex justify-between">
-        <div className="relative bg-white rounded-lg">
+    <div className="px-3 md:px-6 lg:px-10 pb-10 pt-25 flex flex-col gap-3 min-h-screen bg-gray-100 lg:pl-80">
+      <div className="flex justify-between gap-3">
+        <div className="relative bg-white rounded-lg max-w-100 w-full min-w-45">
           <Input
             type="text"
             value={searchTerm}
-            onChange={(e)=>setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search Product..."
-            className="w-100 items-center"
+            className=" items-center"
           />
           <Search className="absolute right-3 top-1.5 text-gray-500" />
         </div>
 
-        <Select onValueChange={(value)=>setSortOrder(value)}>
+        <Select onValueChange={(value) => setSortOrder(value)}>
           <SelectTrigger className="w-50 bg-white">
             <SelectValue placeholder="Sort by Price" />
           </SelectTrigger>
@@ -172,147 +176,152 @@ const AdminProduct = () => {
           </SelectContent>
         </Select>
       </div>
-      {filteredProducts.map((product, index) => {
-        return (
-          <Card key={index} className="px-4">
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2 items-center">
-                <img
-                  src={product.productImg[0].url}
-                  alt=""
-                  className="w-25 h-25"
-                />
+      <div className="flex flex-col gap-4 ">
+        {filteredProducts.map((product, index) => {
+          return (
+            <Card key={index} className="px-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex gap-2 items-center">
+                  <img
+                    src={product.productImg[0].url}
+                    alt=""
+                    className="w-25 h-25"
+                  />
 
-                <h1 className="font-bold w-96 text-gray-700">
-                  {product.productName}
-                </h1>
+                  <h1 className="font-bold max-w-115 line-clamp-4 wrap-break-words text-gray-700">
+                    {product.productName}
+                  </h1>
+                </div>
+                <div className="flex  w-full sm:max-w-70 pl-27 sm:pl-1  justify-between gap-10   ">
+                  <div className="sm:w-full sm:max-w-20 sm:mx-auto sm:text-center">
+                    <h1 className="font-semibold text-gray-800">
+                      ₹{product.productPrice}
+                    </h1>
+                  </div>
+
+                  <div className="flex gap-3 ">
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogTrigger asChild>
+                        <Edit
+                          onClick={() => {
+                            (setOpen(true), setEditProduct(product));
+                          }}
+                          className="text-green-500 cursor-pointer"
+                        />
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-150 max-h-190 overflow-y-scroll">
+                        <DialogHeader>
+                          <DialogTitle>Edit Product</DialogTitle>
+                          <DialogDescription>
+                            Make changes to your product here. Click save when
+                            you&apos;re done.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <FieldGroup>
+                          <Field>
+                            <Label htmlFor="productName">Product Name</Label>
+                            <Input
+                              id="productName"
+                              type="text"
+                              value={editProduct?.productName}
+                              onChange={handleChange}
+                              name="productName"
+                              placeholder="EX-Iphone"
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <Label htmlFor="productPrice">Product Price</Label>
+                            <Input
+                              id="productPrice"
+                              type="number"
+                              value={editProduct?.productPrice}
+                              onChange={handleChange}
+                              name="productPrice"
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <Label htmlFor="brand">Brand</Label>
+                            <Input
+                              id="brand"
+                              type="text"
+                              value={editProduct?.brand}
+                              onChange={handleChange}
+                              name="brand"
+                              placeholder="EX-apple"
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <Label htmlFor="category">Category</Label>
+                            <Input
+                              id="category"
+                              type="text"
+                              value={editProduct?.category}
+                              onChange={handleChange}
+                              name="category"
+                              placeholder="EX-mobile"
+                              required
+                            />
+                          </Field>
+                          <Field>
+                            <Label>Description</Label>
+                            <Textarea
+                              name="productDesc"
+                              value={editProduct?.productDesc}
+                              onChange={handleChange}
+                              placeholder="Enter brief description of product"
+                              required
+                            />
+                          </Field>
+                          <ImageUpload
+                            productData={editProduct}
+                            setProductData={setEditProduct}
+                          />
+                        </FieldGroup>
+                        <DialogFooter>
+                          <DialogClose
+                            render={<Button variant="outline">Cancel</Button>}
+                          />
+                          <Button onClick={handleSave} type="submit">
+                            Save changes
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <Trash2 className="text-red-500 cursor-pointer" />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteProductHandler(product._id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
               </div>
-
-              <h1 className="font-semibold text-gray-800">
-                ₹{product.productPrice}
-              </h1>
-
-              <div className="flex gap-3">
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger asChild>
-                    <Edit
-                      onClick={() => {
-                        (setOpen(true), setEditProduct(product));
-                      }}
-                      className="text-green-500 cursor-pointer"
-                    />
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-150 max-h-190 overflow-y-scroll">
-                    <DialogHeader>
-                      <DialogTitle>Edit Product</DialogTitle>
-                      <DialogDescription>
-                        Make changes to your product here. Click save when
-                        you&apos;re done.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <FieldGroup>
-                      <Field>
-                        <Label htmlFor="productName">Product Name</Label>
-                        <Input
-                          id="productName"
-                          type="text"
-                          value={editProduct?.productName}
-                          onChange={handleChange}
-                          name="productName"
-                          placeholder="EX-Iphone"
-                          required
-                        />
-                      </Field>
-                      <Field>
-                        <Label htmlFor="productPrice">Product Price</Label>
-                        <Input
-                          id="productPrice"
-                          type="number"
-                          value={editProduct?.productPrice}
-                          onChange={handleChange}
-                          name="productPrice"
-                          required
-                        />
-                      </Field>
-                      <Field>
-                        <Label htmlFor="brand">Brand</Label>
-                        <Input
-                          id="brand"
-                          type="text"
-                          value={editProduct?.brand}
-                          onChange={handleChange}
-                          name="brand"
-                          placeholder="EX-apple"
-                          required
-                        />
-                      </Field>
-                      <Field>
-                        <Label htmlFor="category">Category</Label>
-                        <Input
-                          id="category"
-                          type="text"
-                          value={editProduct?.category}
-                          onChange={handleChange}
-                          name="category"
-                          placeholder="EX-mobile"
-                          required
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Description</Label>
-                        <Textarea
-                          name="productDesc"
-                          value={editProduct?.productDesc}
-                          onChange={handleChange}
-                          placeholder="Enter brief description of product"
-                          required
-                        />
-                      </Field>
-                      <ImageUpload
-                        productData={editProduct}
-                        setProductData={setEditProduct}
-                      />
-                    </FieldGroup>
-                    <DialogFooter>
-                      <DialogClose
-                        render={<Button variant="outline">Cancel</Button>}
-                      />
-                      <Button onClick={handleSave} type="submit">
-                        Save changes
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-
-                <AlertDialog>
-                  <AlertDialogTrigger>
-                    <Trash2 className="text-red-500 cursor-pointer" />
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account from our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => deleteProductHandler(product._id)}
-                      >
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </div>
-          </Card>
-        );
-      })}
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 };

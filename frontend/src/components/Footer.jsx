@@ -1,5 +1,5 @@
 import { socialLinks } from "@/lib/constants";
-
+import { Images } from "@/constants/images";
 function Footer() {
   
   return (
@@ -9,7 +9,7 @@ function Footer() {
           {/* Brand Section */}
           <div>
             <div>
-              <img src="/logo.png" alt="logo_img" className="w-50 bg-white p-2 mb-5" />
+              <img src={Images.logo} alt="logo_img" className="w-50 bg-white p-2 mb-5" />
               <p className="text-gray-400   mb-4">
                 Discover premium products at unbeatable prices. We deliver quality, value, and a seamless shopping experience. Shop with confidence, anytime and anywhere
               </p>

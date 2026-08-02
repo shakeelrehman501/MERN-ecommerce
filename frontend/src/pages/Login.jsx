@@ -26,7 +26,7 @@ function Login() {
     password: "",
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const inputData = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -39,16 +39,18 @@ function Login() {
     try {
       setLoading(true);
       const res = await axios.post(
-        `http://localhost:8000/api/v1/user/login`, formData, {
-          headers:{
-            "Content-Type": "application/json"
-          }
-        }
+        `http://localhost:8000/api/v1/user/login`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       );
       if (res.data.success) {
         navigate("/");
-        dispatch(setUser(res.data.user))
-        localStorage.setItem('accessToken', res.data.accessToken)
+        dispatch(setUser(res.data.user));
+        localStorage.setItem("accessToken", res.data.accessToken);
         toast.success(res.data.message);
       }
     } catch (error) {
@@ -59,12 +61,31 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center bg-pink-100 min-h-screen">
+    <div className="flex items-center justify-center bg-pink-100 min-h-screen px-4">
       <Card className="w-full max-w-sm px-2 py-6">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
+          <CardTitle className="text-center text-2xl font-bold mb-4">
+            Login your account
+          </CardTitle>
+          {/* Demo Credentials */}
+          {/* Admin Demo Account */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
+            <p className="font-semibold mb-2">Admin Demo Account</p>
+            <p className="mb-2 text-gray-700">
+              Use this account for admin access.
+            </p>
+
+            <div className="space-y-1">
+              <p>
+                <strong>Email:</strong> shakeeldeveloper501@gmail.com
+              </p>
+              <p>
+                <strong>Password:</strong> 12345
+              </p>
+            </div>
+          </div>
           <CardDescription>
-            Enter the details below to create your account
+            Enter the details below to login your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -129,7 +150,12 @@ function Login() {
               "Login Up"
             )}
           </Button>
-          <p className="text-[16px] pt-2">Don't have an account? <Link to={"/signup"} className="text-pink-500 hover:underline">Sign up</Link></p>
+          <p className="text-[16px] pt-2">
+            Don't have an account?{" "}
+            <Link to={"/signup"} className="text-pink-500 hover:underline">
+              Sign up
+            </Link>
+          </p>
         </CardFooter>
       </Card>
     </div>

@@ -85,18 +85,18 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="pl-88 py-10 pr-20 mx-auto px-4 bg-gray-100">
-      <Card className="w-full my-20">
+    <div className=" py-25 px-3 md:px-6 lg:px-10 mx-auto  bg-gray-100 min-h-screen lg:pl-80">
+      <Card className="w-full ">
         <CardHeader>
           <CardTitle>Add Product</CardTitle>
           <CardDescription>Enter Product details below</CardDescription>
         </CardHeader>
 
         <CardContent>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">   
             <div className="grid gap-2">
-              <Label>Product Name</Label>
-              <Input
+              <Label>Product Name</Label>  
+              <Input 
                 type="text"
                 name="productName"
                 value={productData.productName}
@@ -118,7 +118,7 @@ const AddProduct = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid  sm:grid-cols-2 gap-4">
               {/* Brand */}
               <div className="grid gap-2">
                 <Label>Brand</Label>

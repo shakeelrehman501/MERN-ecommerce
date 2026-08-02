@@ -4,10 +4,13 @@ import axios from "axios";
 import { Edit, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Images } from "@/constants/images";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +18,7 @@ const AdminUsers = () => {
       const accessToken = localStorage.getItem("accessToken");
 
       try {
+        setLoading(true);
         const res = await axios.get(
           "http://localhost:8000/api/v1/user/all-user",
           {
@@ -29,6 +33,8 @@ const AdminUsers = () => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -44,7 +50,7 @@ const AdminUsers = () => {
   );
 
   return (
-    <div className="pl-88 py-20 pr-20 mx-auto px-4">
+    <div className=" pt-26 pb-10 px-3 sm:px-4 md:px-7 mx-auto lg:pl-80 bg-gray-100 min-h-screen">
       <h1 className="font-bold text-2xl">User Management</h1>
       <p>View and manage registered users</p>
 
@@ -58,43 +64,61 @@ const AdminUsers = () => {
           placeholder="Search Users...."
         />
       </div>
-
-      <div className="grid grid-cols-2 gap-7 mt-7 ">
-        {filteredUsers.map((user, index) => {
-          return (
+      {loading ? (
+        <div className="grid md:grid-cols-2  gap-5 mt-7 ">
+          {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className="relative bg-pink-100 p-5 rounded-lg w-100"
+              className="relative bg-pink-100 p-5 rounded-lg w-full max-w-120 min-w-40 h-25 flex"
             >
-              <div className="flex items-center gap-2 ">
-                <img
-                  src={user?.profilePic || "/user.png"}
-                  alt=""
-                  className="rounded-full w-16 aspect-square object-cover border border-pink-600"
-                />
+              <Skeleton className="flex items-center rounded-full gap-2 w-18 h-18 bg-pink-200" />
+              <div className="flex flex-col gap-2 rounded-sm ml-4 mt-2">
+                <Skeleton className="bg-pink-200  w-25 h-6 " />
+                <Skeleton className="bg-pink-200  w-60 h-6" />
+              </div>
 
-                <div>
-                  <h1 className="font-semibold">
-                    {user?.firstName} {user?.lastName}
-                  </h1>
+              <Skeleton className="absolute top-0 right-4 flex gap-3 mt-3 bg-pink-200 w-20 h-6" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2  gap-5 mt-7 ">
+          {filteredUsers.map((user, index) => {
+            return (
+              <div
+                key={index}
+                className="relative bg-pink-100 p-3 sm:p-5 rounded-lg w-full max-w-120 min-w-40"
+              >
+                <div className="flex items-center gap-2 ">
+                  <img
+                    src={user?.profilePic || Images.userAvator}
+                    alt=""
+                    className={`rounded-full w-16 aspect-square object-cover border border-blue-600`}
+                  />
 
-                  <h3>{user?.email}</h3>
+                  <div>
+                    <h1 className="font-semibold">
+                      {user?.firstName} {user?.lastName}
+                    </h1>
+
+                    <h3 className="text-sm sm:text-[16px]">{user?.email}</h3>
+                  </div>
+                </div>
+
+                <div className="absolute top-0 right-4 flex gap-3 mt-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate(`/dashboard/users/${user?._id}`)}
+                  >
+                    <Edit />
+                    Edit
+                  </Button>
                 </div>
               </div>
-
-              <div className="absolute top-0 right-2 flex gap-3 mt-3">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate(`/dashboard/users/${user?._id}`)}
-                >
-                  <Edit />
-                  Edit
-                </Button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
