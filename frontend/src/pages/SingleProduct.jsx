@@ -1,4 +1,3 @@
-
 import Breadcrums from "@/components/Breadcrums";
 import ProductDesc from "@/components/ProductDesc";
 import ProductImg from "@/components/ProductImg";
@@ -14,10 +13,10 @@ const SingleProduct = () => {
   const product = products.find((item) => item._id === productId);
 
   return (
-    <div className="pt-24 py-10 max-w-7xl mx-auto">
+    <div className="pt-24 py-5 lg:py-10 max-w-7xl mx-auto px-4">
       <Breadcrums product={product} />
 
-      <div className="mt-10 grid grid-cols-2 items-start">
+      <div className="mt-6 lg:mt-10 flex flex-col md:flex-row gap-8 md:gap-5 lg:gap-6 ">
         <ProductImg images={product.productImg} />
         <ProductDesc product={product} />
       </div>

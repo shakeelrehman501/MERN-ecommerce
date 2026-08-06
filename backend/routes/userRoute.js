@@ -1,30 +1,44 @@
+import express from "express";
+import {
+  loggedIn,
+  loggedOut,
+  register,
+  reVerify,
+  forgotPassword,
+  verify,
+  verifyOTP,
+  changePassword,
+  allUser,
+  getUserById,
+  updateUser,
+  refreshToken,
+  resetPassword,
+} from "../controllers/userController.js";
+import { isAdmin, isAuthenticated } from "../middleware/isAuthenticated.js";
+import { singleUpload } from "../middleware/multer.js";
+import { validate } from "../middleware/validate.js";
+import { changePasswordSchema, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, reVerifySchema, verifyOtpSchema, verifySchema } from "../validations/auth.validation.js";
+
+const router = express.Router();
+
+// Authentication
+router.post("/register", validate(registerSchema), register);
+router.post("/verify", validate(verifySchema), verify);
+router.post("/reverify", validate(reVerifySchema), reVerify);
+router.post("/login", validate(loginSchema), loggedIn);
+router.post("/logout", isAuthenticated, loggedOut);
+router.post("/refresh-token", refreshToken);
+
+// Forgot Password
+router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
+router.post("/verify-otp", validate(verifyOtpSchema), verifyOTP);
+router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
+router.patch("/change-password", isAuthenticated, validate(changePasswordSchema), changePassword);
 
 
-import express from "express"
-import {  loggedIn, loggedOut, register, reVerify, forgotPassword, verify, verifyOTP, changePassword, allUser, getUserById, updateUser } from "../controllers/userController.js"
-import {isAdmin, isAuthenticated} from "../middleware/isAuthenticated.js"
-import { singleUpload } from "../middleware/multer.js"
-
-
-
-const router = express.Router()
-
-router.post('/register', register)
-router.post('/verify', verify)
-router.post('/reverify', reVerify)
-router.post('/login', loggedIn)
-router.post('/logout', isAuthenticated, loggedOut)
-router.post('/forgot-password', forgotPassword)
-router.post('/verify-otp/:email', verifyOTP)
-router.post('/change-password/:email', changePassword)
-router.get('/all-user', isAuthenticated, isAdmin, allUser)
-router.get('/get-user/:userId', getUserById)
-router.put('/update/:id', isAuthenticated, singleUpload, updateUser )
-
-
-
+// Users
+router.get("/all-user", isAuthenticated, isAdmin, allUser);
+router.get("/get-user/:userId", getUserById);
+router.put("/update/:id", isAuthenticated, singleUpload, updateUser);
 
 export default router;
-
-
-

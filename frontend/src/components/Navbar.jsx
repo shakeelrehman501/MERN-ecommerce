@@ -5,40 +5,43 @@ import { FiMenu } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "sonner";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/redux/userSlice";
 import { Images } from "@/constants/images";
+import { logout } from "@/api/authApi";
+import { logoutUser } from "@/redux/userSlice";
 
 function Navbar() {
   const { user } = useSelector((store) => store.user);
   const { cart } = useSelector((store) => store.product);
-  const accessToken = localStorage.getItem("accessToken");
   const admin = user?.role === "admin" ? true : false;
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutHandler = async () => {
-    try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/user/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      if (res.data.success) {
-        dispatch(setUser(null));
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Logout error");
-    }
-  };
+  if (loading) return;
+
+  try {
+    setLoading(true);
+
+    const data = await logout();
+
+    dispatch(logoutUser());
+
+    toast.success(data.message);
+
+    navigate("/login", {
+      replace: true,
+    });
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      "Something went wrong. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <header className="top-0 bg-pink-50 fixed w-full z-20 border-b border-pink-200">
       <div className="relative max-w-7xl mx-auto flex justify-between items-center py-5 px-2">

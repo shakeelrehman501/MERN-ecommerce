@@ -1,10 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "@/pages/Home";
-import Signup from "@/pages/Signup";
-import Login from "@/pages/Login";
+import Signup from "@/pages/auth/Signup";
+import Login from "@/pages/auth/Login";
 import Navbar from "@/components/Navbar";
-import Verify from "@/pages/Verify";
-import VerifyEmail from "@/pages/VerifyEmail";
+import VerifyEmail from "@/pages/auth/VerifyEmail";
 import Footer from "@/components/Footer";
 import Profile from "@/pages/Profile";
 import Products from "@/pages/Product";
@@ -16,6 +15,11 @@ import AdminUsers from "@/pages/admin/AdminUsers";
 import UserInfo from "@/pages/admin/UserInfo";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import SingleProduct from "@/pages/SingleProduct";
+import ForgotPassword from "@/pages/auth/FortgotPossword";
+import VerifyOTP from "@/pages/auth/VerifyOTP";
+import ResetPassword from "@/pages/auth/ResetPassword";
+import CheckEmail from "@/pages/auth/CheckEmail";
+import PublicRoute from "@/components/PublicRoute";
 
 export const router = createBrowserRouter([
   {
@@ -30,19 +34,59 @@ export const router = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <PublicRoute>
+        <Signup />
+      </PublicRoute>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
   },
   {
-    path: "/verify",
-    element: <Verify />,
+    path: "/forgot-password",
+    element: (
+      <PublicRoute>
+        <ForgotPassword />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/verify-otp",
+    element: (
+      <PublicRoute>
+        <VerifyOTP />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <PublicRoute>
+        <ResetPassword />
+      </PublicRoute>
+    )
+  },
+  {
+    path: "/check-email",
+    element: (
+      <PublicRoute>
+        <CheckEmail />
+      </PublicRoute>
+    )
   },
   {
     path: "/verify/:token",
-    element: <VerifyEmail />,
+    element: (
+      <PublicRoute>
+        <VerifyEmail />
+      </PublicRoute>
+    )
   },
   {
     path: "/profile/:userId",

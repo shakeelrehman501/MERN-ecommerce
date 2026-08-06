@@ -2,16 +2,17 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: { type: String, required: true,},
+    firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true, unique:true, },
-    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select:false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     token: { type: String, default: null },
     isVerified: { type: Boolean, default: false },
     isLoggedIn: { type: Boolean, default: false },
-    otp: { type: String, default: null },
+    otp: { type: String, default: null, select:false },
     otpExpiry: { type: Date, default: null },
+    passwordResetVerified: { type: Boolean, default: false},
     profilePic: { type: String, default: "" }, //Cloud image url
     profilePicPublicId: { type: String, default: "" }, // Cloud public_id for deletion or updateion
     address: { type: String },

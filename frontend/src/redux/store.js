@@ -12,7 +12,6 @@ import  userSlice  from './userSlice'
 import productSlice from './productSlice'
 import storage from 'redux-persist/lib/storage'
 
-
 const persistConfig = {
   key: 'root',
   version: 1,

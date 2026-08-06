@@ -31,12 +31,12 @@ const ProductDesc = ({ product }) => {
     }
   };
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="font-bold text-4xl text-gray-800">
+    <div className="flex md:flex-1 flex-col gap-4  md:mt-0 sm:px-2   ">
+      <h1 className="font-bold text-xl lg:text-3xl text-gray-800">
         {product.productName}
       </h1>
 
-      <p className="text-gray-800">
+      <p className="text-gray-800 text-[16px]">
         {product.category} | {product.brand}
       </p>
 
@@ -44,11 +44,11 @@ const ProductDesc = ({ product }) => {
         ₹{product.productPrice}
       </h2>
 
-      <p className="line-clamp-12 text-muted-foreground">
+      <p className="line-clamp-12 text-[16px] lg:text-[18px] text-muted-foreground">
         {product.productDesc}
       </p>
 
-      <div className="flex gap-2 items-center w-75">
+      <div className="flex gap-2 items-center flex-wrap">
         <p className="text-gray-800 font-semibold">Quantity :</p>
 
         <Input type="number" className="w-14" defaultValue={1} />

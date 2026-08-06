@@ -24,3 +24,6 @@ export const socialLinks = [
     href: "https://www.linkedin.com/in/shakeel-rehman-332339251/",
   },
 ];
+
+
+export const BASE_URL = "http://localhost:8000/api/v1/user";
