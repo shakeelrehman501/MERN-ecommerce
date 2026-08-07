@@ -9,6 +9,5 @@ export const refreshAccessToken = async () => {
       withCredentials: true,
     },
   );
-
   return data;
 };

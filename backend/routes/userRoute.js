@@ -18,6 +18,7 @@ import { isAdmin, isAuthenticated } from "../middleware/isAuthenticated.js";
 import { singleUpload } from "../middleware/multer.js";
 import { validate } from "../middleware/validate.js";
 import { changePasswordSchema, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, reVerifySchema, verifyOtpSchema, verifySchema } from "../validations/auth.validation.js";
+import { updateUserSchema } from "../validations/user.validation.js";
 
 const router = express.Router();
 
@@ -39,6 +40,7 @@ router.patch("/change-password", isAuthenticated, validate(changePasswordSchema)
 // Users
 router.get("/all-user", isAuthenticated, isAdmin, allUser);
 router.get("/get-user/:userId", getUserById);
-router.put("/update/:id", isAuthenticated, singleUpload, updateUser);
+router.put("/update/:id", isAuthenticated, singleUpload, validate(updateUserSchema), updateUser);
+
 
 export default router;

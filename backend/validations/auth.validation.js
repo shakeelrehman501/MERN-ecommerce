@@ -108,6 +108,7 @@ export const resetPasswordSchema = z.object({
     message: "Passwords do not match",
   });
 
+
 export const changePasswordSchema = z
   .object({
     currentPassword: z
@@ -120,7 +121,7 @@ export const changePasswordSchema = z
       .max(50, "Password cannot exceed 50 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-        "Password must contain uppercase, lowercase, number and special character"
+        "Password must contain at least one uppercase letter, one lowercase, number and special character"
       ),
 
     confirmPassword: z.string(),
@@ -129,3 +130,4 @@ export const changePasswordSchema = z
     path: ["confirmPassword"],
     message: "Passwords do not match",
   });  
+

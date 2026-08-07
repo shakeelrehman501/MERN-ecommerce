@@ -704,11 +704,13 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const userIdToUpdate = req.params.id; //user id for update user
-    const loggedInUser = req.user; //from isAuthenticated middleware
+    const userIdToUpdate = req.params.id;
+    const loggedInUser = req.user;
+
     const { firstName, lastName, address, city, zipCode, phoneNo, role } =
       req.body;
 
+    // Sirf apni profile ya admin update kar sakta hai
     if (
       loggedInUser._id.toString() !== userIdToUpdate &&
       loggedInUser.role !== "admin"
@@ -718,32 +720,37 @@ export const updateUser = async (req, res) => {
         message: "You are not allowed to update this profile",
       });
     }
-    let user = await User.findById(userIdToUpdate);
+
+    const user = await User.findById(userIdToUpdate);
+
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
+
     let profilePicUrl = user.profilePic;
     let profilePicPublicId = user.profilePicPublicId;
 
-    // if new file is uploaded
+    // Agar new profile picture upload hui ho
     if (req.file) {
+      // Purani image delete karo
       if (profilePicPublicId) {
         await cloudinary.uploader.destroy(profilePicPublicId);
       }
 
       const uploadResult = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "profiles" },
+          {
+            folder: "profiles",
+          },
           (error, result) => {
-            console.log("Error:", error);
-            console.log("Result:", result);
-            if (error) reject(error);
-            else resolve(result);
+            if (error) return reject(error);
+            resolve(result);
           },
         );
+
         stream.end(req.file.buffer);
       });
 
@@ -751,14 +758,20 @@ export const updateUser = async (req, res) => {
       profilePicPublicId = uploadResult.public_id;
     }
 
-    //update fields
-    user.firstName = firstName || user.firstName;
-    user.lastName = lastName || user.lastName;
-    user.address = address || user.address;
-    user.city = city || user.city;
-    user.zipCode = zipCode || user.zipCode;
-    user.phoneNo = phoneNo || user.phoneNo;
-    user.role = role;
+    // User fields update
+    user.firstName = firstName ?? user.firstName;
+    user.lastName = lastName ?? user.lastName;
+    user.address = address ?? user.address;
+    user.city = city ?? user.city;
+    user.zipCode = zipCode;
+    user.phoneNo = phoneNo ?? user.phoneNo;
+
+    // Sirf admin role change kar sakta hai
+    if (loggedInUser.role === "admin" && role) {
+      user.role = role;
+    }
+
+    // Profile picture update
     user.profilePic = profilePicUrl;
     user.profilePicPublicId = profilePicPublicId;
 
@@ -766,7 +779,7 @@ export const updateUser = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Profile Updated Successfully",
+      message: "Profile updated successfully",
       user: updatedUser,
     });
   } catch (error) {

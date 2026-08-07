@@ -8,7 +8,7 @@ export const generateVerificationToken = (userId) => {
     { id: userId },
     process.env.EMAIL_VERIFICATION_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "10m",
     }
   );
 };
@@ -35,7 +35,7 @@ export const generateAccessToken = (userId) => {
     { id: userId },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "10d",
       // expiresIn: "15m",
     }
   );

@@ -59,6 +59,6 @@ export const resetPassword = async (payload) => {
 // ====================
 
 export const changePassword = async (payload) => {
-  const { data } = await api.patch("/change-password", payload);
+  const { data } = await api.patch("/change-password", payload, getAuthConfig());
   return data;
 };
