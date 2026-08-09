@@ -1,7 +1,6 @@
 import { socialLinks } from "@/lib/constants";
-import { Images } from "@/constants/images";
+import { Images } from "@/lib/constants.js";
 function Footer() {
-  
   return (
     <div className="relative bg-gray-800  text-white py-12 px-2 sm:px-8 overflow-hidden">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -9,16 +8,22 @@ function Footer() {
           {/* Brand Section */}
           <div>
             <div>
-              <img src={Images.logo} alt="logo_img" className="w-50 bg-white p-2 mb-5" />
+              <img
+                src={Images.logo}
+                alt="logo_img"
+                className="w-50 bg-white p-2 mb-5"
+              />
               <p className="text-gray-400   mb-4">
-                Discover premium products at unbeatable prices. We deliver quality, value, and a seamless shopping experience. Shop with confidence, anytime and anywhere
+                Discover premium products at unbeatable prices. We deliver
+                quality, value, and a seamless shopping experience. Shop with
+                confidence, anytime and anywhere
               </p>
             </div>
             <div className="flex gap-3">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
-                  <div  key={index}>
+                  <div key={index}>
                     <a
                       href={social.href}
                       className="bg-gray-700 hover:bg-blue-500 p-2 rounded-lg flex"
@@ -44,12 +49,11 @@ function Footer() {
               <span>Order Tracking</span>
               <span>Size Guide</span>
             </div>
-            
           </div>
 
           {/* Contact Info */}
           <div>
-            <div >
+            <div>
               <h4 className="text-lg font-bold   mb-4">Contact Info</h4>
               <ul className="space-y-2 text-gray-400  ">
                 <li>Email: shakeelrehman501@gmail.com</li>

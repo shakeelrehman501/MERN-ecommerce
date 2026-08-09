@@ -4,35 +4,29 @@ import { Skeleton } from "./ui/skeleton";
 import { toast } from "sonner";
 import { setCart } from "@/redux/productSlice";
 import { useDispatch } from "react-redux";
-import axios from "axios";
+import { addToCart } from "@/api/cartApi";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product, loading }) => {
   const { productImg, productPrice, productName } = product;
-  const accessToken = localStorage.getItem('accessToken')
+  
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  const addToCart = async (productId) => {
-    try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/cart/add`,
-        { productId },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+  const handleAddToCart = async (productId) => {
+  try {
+    const data = await addToCart({ productId });
 
-      if (res.data.success) {
-        toast.success("Product added to Cart");
-        dispatch(setCart(res.data.cart));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    toast.success(data.message);
+
+    dispatch(setCart(data.cart));
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Something went wrong. Please try again.",
+    );
+  }
+};
 
   return (
     <div className="shadow-md rounded-lg border overflow-hidden h-max">
@@ -65,7 +59,7 @@ const ProductCard = ({ product, loading }) => {
           </div>
 
           <Button 
-          onClick={()=>addToCart(product._id)}
+          onClick={()=>handleAddToCart(product._id)}
           className="bg-blue-600 hover:bg-blue-500  mb-3 w-full px-2">
             <ShoppingCart />
             Add to Cart

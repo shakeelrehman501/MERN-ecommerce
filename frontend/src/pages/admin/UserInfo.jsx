@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Images } from "@/constants/images";
+import { Images } from "@/lib/constants.js";
 const UserInfo = () => {
   const navigate = useNavigate();
   const [updateUser, setUpdateUser] = useState(null);
@@ -31,7 +31,7 @@ const UserInfo = () => {
       ...updateUser,
       profilePic: URL.createObjectURL(selectedFile),
     }); //preview only
-    setImageLoading(true)
+    setImageLoading(true);
   };
 
   // main function
@@ -112,14 +112,14 @@ const UserInfo = () => {
             {/* profile picture */}
             <div className="flex flex-col items-center relative">
               {imageLoading && (
-                  <div className="absolute w-32 h-32 inset-0 rounded-full flex items-center justify-center border-4 border-blue-600 bg-gray-200">
-                    <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                  </div>
-                )}
+                <div className="absolute w-32 h-32 inset-0 rounded-full flex items-center justify-center border-4 border-blue-600 bg-gray-200">
+                  <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                </div>
+              )}
               <img
                 src={updateUser?.profilePic || Images.userAvator}
                 alt="profile"
-                onLoad={()=>setImageLoading(false)}
+                onLoad={() => setImageLoading(false)}
                 className={`w-32 h-32 rounded-full object-cover border-4 border-blue-600
                   ${imageLoading ? "opacity-0" : "opacity-100"}
                   `}
@@ -228,12 +228,15 @@ const UserInfo = () => {
               </div>
               <div className="flex gap-3 items-center">
                 <Label className="block text-sm font-medium">Role:</Label>
-                <RadioGroup 
-                value={updateUser?.role}
-                onValueChange={(value)=>setUpdateUser({...updateUser, role:value})}
-                className="flex items-center">
+                <RadioGroup
+                  value={updateUser?.role}
+                  onValueChange={(value) =>
+                    setUpdateUser({ ...updateUser, role: value })
+                  }
+                  className="flex items-center"
+                >
                   <div className="flex items-center space-x-2 ">
-                    <RadioGroupItem value="user" id="user"/>
+                    <RadioGroupItem value="user" id="user" />
                     <Label htmlFor="user">User</Label>
                   </div>
                   <div className="flex items-center space-x-2">

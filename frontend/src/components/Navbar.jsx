@@ -6,7 +6,7 @@ import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
-import { Images } from "@/constants/images";
+import { Images } from "@/lib/constants.js";
 import { logout } from "@/api/authApi";
 import { logoutUser } from "@/redux/userSlice";
 
@@ -19,29 +19,29 @@ function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const logoutHandler = async () => {
-  if (loading) return;
+    if (loading) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const data = await logout();
+      const data = await logout();
 
-    dispatch(logoutUser());
+      dispatch(logoutUser());
 
-    toast.success(data.message);
+      toast.success(data.message);
 
-    navigate("/login", {
-      replace: true,
-    });
-  } catch (error) {
-    toast.error(
-      error.response?.data?.message ||
-      "Something went wrong. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      navigate("/login", {
+        replace: true,
+      });
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <header className="top-0 bg-pink-50 fixed w-full z-20 border-b border-pink-200">
       <div className="relative max-w-7xl mx-auto flex justify-between items-center py-5 px-2">

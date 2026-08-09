@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Images } from "@/constants/images.js";
+import { Images } from "@/lib/constants.js";
 
 function Hero() {
   const [loading, setLoading] = useState(true);

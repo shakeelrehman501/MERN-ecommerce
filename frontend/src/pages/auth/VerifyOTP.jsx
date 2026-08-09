@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +13,10 @@ function VerifyOTP() {
   const inputRefs = useRef([]);
 
   useEffect(() => {
-  if (!email) {
-    navigate("/forgot-password");
-  }
-}, [email, navigate]);
+    if (!email) {
+      navigate("/forgot-password");
+    }
+  }, [email, navigate]);
 
   // Handle Input Change
   const handleChange = (value, index) => {
@@ -36,11 +35,7 @@ function VerifyOTP() {
 
   // Handle Backspace
   const handleKeyDown = (e, index) => {
-    if (
-      e.key === "Backspace" &&
-      !otp[index] &&
-      index > 0
-    ) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1].focus();
     }
   };
@@ -49,10 +44,7 @@ function VerifyOTP() {
   const handlePaste = (e) => {
     e.preventDefault();
 
-    const pastedData = e.clipboardData
-      .getData("text")
-      .trim()
-      .slice(0, 6);
+    const pastedData = e.clipboardData.getData("text").trim().slice(0, 6);
 
     if (!/^\d+$/.test(pastedData)) return;
 
@@ -80,22 +72,16 @@ function VerifyOTP() {
     try {
       setLoading(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/verify-otp`,
-        {
-          email,
-          otp: enteredOtp,
-        }
-      );
+      const { data } = await axios.post(`${BASE_URL}/verify-otp`, {
+        email,
+        otp: enteredOtp,
+      });
 
       toast.success(data.message);
 
-     navigate("/reset-password");
+      navigate("/reset-password");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Something went wrong"
-      );
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -103,42 +89,22 @@ function VerifyOTP() {
 
   return (
     <div className="min-h-screen bg-pink-100 flex justify-center items-center px-5">
-
       <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8">
-
-        <h1 className="text-3xl font-bold text-center">
-          Verify OTP
-        </h1>
+        <h1 className="text-3xl font-bold text-center">Verify OTP</h1>
 
         <p className="text-gray-500 text-center mt-3 mb-8">
           Enter the 6-digit OTP sent to your email.
         </p>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-8"
-        >
-
-          <div
-            className="flex justify-between"
-            onPaste={handlePaste}
-          >
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="flex justify-between" onPaste={handlePaste}>
             {otp.map((digit, index) => (
               <input
                 key={index}
-                ref={(el) =>
-                  (inputRefs.current[index] = el)
-                }
+                ref={(el) => (inputRefs.current[index] = el)}
                 value={digit}
-                onChange={(e) =>
-                  handleChange(
-                    e.target.value,
-                    index
-                  )
-                }
-                onKeyDown={(e) =>
-                  handleKeyDown(e, index)
-                }
+                onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
                 maxLength={1}
                 className="w-12 h-12 border rounded-lg text-center text-2xl font-bold outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -150,15 +116,10 @@ function VerifyOTP() {
             disabled={loading}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-60"
           >
-            {loading
-              ? "Verifying..."
-              : "Verify OTP"}
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }

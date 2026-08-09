@@ -2,6 +2,8 @@ import { LuLinkedin, LuFacebook } from "react-icons/lu";
 import { GrInstagram } from "react-icons/gr";
 import { FiGithub } from "react-icons/fi";
 
+export const BASE_URL = "http://localhost:8000/api/v1";
+
 export const socialLinks = [
   {
     name: "Facebook",
@@ -25,5 +27,9 @@ export const socialLinks = [
   },
 ];
 
+export const Images = {
+    logo:"https://res.cloudinary.com/ohuqxrxy/image/upload/v1785551373/logo_vjcihi.png",
+    hero: "https://res.cloudinary.com/ohuqxrxy/image/upload/v1785551372/hero_img_rzx44n.png",
+    userAvator:"https://res.cloudinary.com/ohuqxrxy/image/upload/v1785551372/user_lw36xt.png"
+};
 
-export const BASE_URL = "http://localhost:8000/api/v1/user";

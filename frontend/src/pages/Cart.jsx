@@ -3,12 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { setCart } from "@/redux/productSlice";
-import axios from "axios";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getCart, updateCartQuantity, removeFromCart } from "@/api/cartApi";
 
 function Cart() {
   const { cart } = useSelector((store) => store.product);
@@ -19,66 +19,60 @@ function Cart() {
   const tax = subtotal * 0.05; // 5% tax
   const total = subtotal + shipping + tax;
 
-  const API = "http://localhost:8000/api/v1/cart";
-  const accessToken = localStorage.getItem("accessToken");
-
   const handleUpdateQuantity = async (productId, type) => {
     try {
-      const res = await axios.put(
-        `${API}/update`,
-        { productId, type },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const data = await updateCartQuantity({
+        productId,
+        type,
+      });
 
-      if (res.data.success) {
-        dispatch(setCart(res.data.cart));
+      if (data.success) {
+        dispatch(setCart(data.cart));
       }
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
     }
   };
 
   const handleRemove = async (productId) => {
     try {
-      const res = await axios.delete(`${API}/remove`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: { productId },
+      const data = await removeFromCart({
+        productId,
       });
-      if (res.data.success) {
-        dispatch(setCart(res.data.cart));
+
+      if (data.success) {
+        dispatch(setCart(data.cart));
         toast.success("Product removed from cart");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
     }
   };
 
   useEffect(() => {
     const loadCart = async () => {
       try {
-        const res = await axios.get(API, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const data = await getCart();
 
-        if (res.data.success) {
-          dispatch(setCart(res.data.cart));
+        if (data.success) {
+          dispatch(setCart(data.cart));
         }
       } catch (error) {
-        console.log(error);
+        toast.error(
+          error.response?.data?.message ||
+            "Something went wrong. Please try again.",
+        );
       }
     };
 
     loadCart();
-  }, [dispatch, accessToken]);
-
+  }, [dispatch]);
   return (
     <div className="pt-25 bg-gray-50 min-h-screen">
       {cart?.items?.length > 0 ? (

@@ -5,17 +5,21 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import axios from "axios";
 import { setUser } from "@/redux/userSlice";
 import { Loader2 } from "lucide-react";
-import { Images } from "@/constants/images";
+import { Images } from "@/lib/constants.js";
+import { updateUser as updateUserApi } from "@/api/authApi";
 
 function Profile() {
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-  const { user } = useSelector((store) => store.user);
-  const params = useParams();
-  const userId = params.userId;
+
+  const dispatch = useDispatch();
+
+  const { user, accessToken } = useSelector((store) => store.user);
+
+  const { userId } = useParams();
+
   const [updateUser, setUpdateUser] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -29,31 +33,41 @@ function Profile() {
   });
 
   const [file, setFile] = useState(null);
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    setUpdateUser({ ...updateUser, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setUpdateUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+
+    if (!selectedFile) return;
+
     setFile(selectedFile);
-    setUpdateUser({
-      ...updateUser,
+
+    setUpdateUser((prev) => ({
+      ...prev,
       profilePic: URL.createObjectURL(selectedFile),
-    }); //preview only
+    }));
   };
-  // main function
+
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
-    const accessToken = localStorage.getItem("accessToken");
+
+    if (loading) return;
+
     try {
-      // use FormData for text + file
+      setLoading(true);
+
       const formData = new FormData();
+
       formData.append("firstName", updateUser.firstName);
       formData.append("lastName", updateUser.lastName);
-      formData.append("email", updateUser.email);
       formData.append("phoneNo", updateUser.phoneNo);
       formData.append("address", updateUser.address);
       formData.append("city", updateUser.city);
@@ -61,26 +75,25 @@ function Profile() {
       formData.append("role", updateUser.role);
 
       if (file) {
-        formData.append("file", file); // image file for backend multer
+        formData.append("file", file);
       }
-      const res = await axios.put(
-        `http://localhost:8000/api/v1/user/update/${userId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        },
+
+      const data = await updateUserApi(userId, formData);
+
+      dispatch(
+        setUser({
+          user: data.user,
+          accessToken,
+        }),
       );
 
-      if (res.data.success) {
-        toast.success(res.data.message);
-        dispatch(setUser(res.data.user));
-      }
+      toast.success(data.message);
     } catch (error) {
-      console.log(error.response);
-      toast.error("Failed to update profile");
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((err) => toast.error(err.message));
+      } else {
+        toast.error(error.response?.data?.message || "Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -107,8 +120,6 @@ function Profile() {
                     imageLoading ? "opacity-0" : "opacity-100"
                   }`}
                 />
-
-                
               </div>
               {/* <img src="/shakeel.png" alt="profile" className='w-32 h-32 rounded-full object-cover border-4 border-pink-800' /> */}
               <Label className="mt-4 cursor-pointer bg-blue-600 text-white whitespace-nowrap px-4 py-2 rounded hover:bg-pink-700">

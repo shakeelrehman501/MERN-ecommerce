@@ -28,13 +28,10 @@ function Products() {
   const { products } = useSelector((store) => store.product);
   const [loading, setLoading] = useState(false);
   const [showFilterbar, setShowFilterbar] = useState(false);
-
   const [search, setSearch] = useState("");
-
   // Selected Filters
   const [category, setCategory] = useState("All");
   const [brand, setBrand] = useState("All");
-
   // Lists
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);

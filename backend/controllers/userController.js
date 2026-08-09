@@ -272,6 +272,12 @@ export const loggedIn = async (req, res) => {
       email: existingUser.email,
       role: existingUser.role,
       isVerified: existingUser.isVerified,
+      phoneNo: existingUser.phoneNo,
+      address: existingUser.address,
+      city: existingUser.city,
+      zipCode: existingUser.zipCode,
+      profilePic: existingUser.profilePic,
+      profilePicPublicId: existingUser.profilePicPublicId,
     };
 
     return res.status(200).json({
@@ -704,6 +710,7 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
+    
     const userIdToUpdate = req.params.id;
     const loggedInUser = req.user;
 
@@ -753,10 +760,11 @@ export const updateUser = async (req, res) => {
 
         stream.end(req.file.buffer);
       });
-
       profilePicUrl = uploadResult.secure_url;
       profilePicPublicId = uploadResult.public_id;
     }
+
+    
 
     // User fields update
     user.firstName = firstName ?? user.firstName;

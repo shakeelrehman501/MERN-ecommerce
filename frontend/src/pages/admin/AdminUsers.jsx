@@ -4,7 +4,7 @@ import axios from "axios";
 import { Edit, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Images } from "@/constants/images";
+import { Images } from "@/lib/constants.js";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const AdminUsers = () => {
