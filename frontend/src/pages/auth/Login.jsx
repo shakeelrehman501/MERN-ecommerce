@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 
-import { login } from "@/api/authApi";
+import { login } from "@/api/authApi.js";
 import { setUser } from "@/redux/userSlice";
 
 function Login() {

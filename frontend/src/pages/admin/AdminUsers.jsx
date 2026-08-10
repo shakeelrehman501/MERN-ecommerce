@@ -1,46 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
 import { Edit, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Images } from "@/lib/constants.js";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { getAllUsers } from "@/api/userApi.js";
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const getAllUsers = async () => {
-      const accessToken = localStorage.getItem("accessToken");
 
-      try {
-        setLoading(true);
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/user/all-user",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
+const [users, setUsers] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
+const [loading, setLoading] = useState(false);
 
-        if (res.data.success) {
-          setUsers(res.data.users);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+const navigate = useNavigate();
 
-    getAllUsers();
-  }, []);
+// ====================
+// Get All Users
+// ====================
 
+useEffect(() => {
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+
+      const data = await getAllUsers();
+
+      setUsers(data.users);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to fetch users",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadUsers();
+}, []);
   const filteredUsers = users.filter(
     (user) =>
       `${user.firstName} ${user.lastName}`

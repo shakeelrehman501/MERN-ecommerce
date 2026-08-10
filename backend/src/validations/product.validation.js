@@ -9,7 +9,7 @@ export const addProductSchema = z.object({
     .string()
     .trim()
     .min(3, "Product name must be at least 2 words")
-    .max(100, "Product name cannot exceed 100 characters")
+    .max(400, "Product name cannot exceed 100 characters")
     .refine(
       (value) => value.split(/\s+/).length >= 2,
       "Product name must contain at least 2 words",
@@ -19,7 +19,7 @@ export const addProductSchema = z.object({
     .string()
     .trim()
     .min(10, "Product description must be at least 10 characters")
-    .max(1000, "Product description cannot exceed 1000 characters"),
+    .max(10000, "Product description cannot exceed 1000 characters"),
 
   productPrice: z.coerce
     .number({
@@ -31,11 +31,11 @@ export const addProductSchema = z.object({
     .string()
     .trim()
     .min(2, "Category must be at least 2 characters")
-    .max(50, "Category cannot exceed 50 characters")
-    .regex(
-      /^[A-Za-z]+$/,
-      "Category must contain only one word",
-    ),
+    .max(50, "Category cannot exceed 50 characters"),
+    // .regex(
+    //   /^[A-Za-z]+$/,
+    //   "Category must contain only one word",
+    // ),
 
   brand: z
     .string()

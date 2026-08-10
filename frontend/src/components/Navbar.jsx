@@ -3,12 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2, ShoppingCart } from "lucide-react";
 import { FiMenu } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { Images } from "@/lib/constants.js";
 import { logout } from "@/api/authApi";
 import { logoutUser } from "@/redux/userSlice";
+import { clearCart } from "@/redux/productSlice";
+import { getCart } from "@/api/cartApi";
+import { setCart } from "@/redux/productSlice";
 
 function Navbar() {
   const { user } = useSelector((store) => store.user);
@@ -18,6 +21,26 @@ function Navbar() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+  // Cart fetch
+  useEffect(() => {
+  if (!user) return;
+
+  const loadCart = async () => {
+    try {
+      const data = await getCart();
+
+      if (data.success) {
+        dispatch(setCart(data.cart));
+      }
+    } catch (error) {
+      console.log("Cart Error:", error);
+    }
+  };
+
+  loadCart();
+}, [user, dispatch]);
   const logoutHandler = async () => {
     if (loading) return;
 
@@ -27,6 +50,7 @@ function Navbar() {
       const data = await logout();
 
       dispatch(logoutUser());
+      dispatch(clearCart());
 
       toast.success(data.message);
 

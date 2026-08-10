@@ -1,16 +1,29 @@
-import axios from "axios";
+
+import { verifyOTP } from "@/api/authApi";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { BASE_URL } from "../../lib/constants";
+
 
 function VerifyOTP() {
   const navigate = useNavigate();
-  const email = sessionStorage.getItem("resetEmail");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+   const email = sessionStorage.getItem("resetEmail");
+
+  const [otp, setOtp] = useState([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
 
   const inputRefs = useRef([]);
+
+  // ====================
+  // Check Email
+  // ====================
 
   useEffect(() => {
     if (!email) {
@@ -18,61 +31,124 @@ function VerifyOTP() {
     }
   }, [email, navigate]);
 
-  // Handle Input Change
+  // ====================
+  // Handle OTP Change
+  // ====================
+
   const handleChange = (value, index) => {
-    if (!/^\d*$/.test(value)) return;
+    // Only numbers allowed
+    if (!/^\d*$/.test(value)) {
+      return;
+    }
 
     const newOtp = [...otp];
 
+    // Only keep last entered digit
     newOtp[index] = value.slice(-1);
 
     setOtp(newOtp);
 
-    if (value && index < 5) {
-      inputRefs.current[index + 1].focus();
+    // Move to next input
+    if (
+      value &&
+      index < otp.length - 1
+    ) {
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
+  // ====================
   // Handle Backspace
+  // ====================
+
   const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1].focus();
+    if (
+      e.key === "Backspace" &&
+      !otp[index] &&
+      index > 0
+    ) {
+      inputRefs.current[index - 1]?.focus();
     }
   };
 
+  // ====================
   // Paste OTP
+  // ====================
+
   const handlePaste = (e) => {
     e.preventDefault();
 
-    const pastedData = e.clipboardData.getData("text").trim().slice(0, 6);
+    const pastedData = e.clipboardData
+      .getData("text")
+      .trim()
+      .slice(0, 6);
 
-    if (!/^\d+$/.test(pastedData)) return;
+    // Only 6 digit numbers
+    if (!/^\d+$/.test(pastedData)) {
+      return;
+    }
 
-    const values = pastedData.split("");
+    const newOtp = [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+    ];
 
-    const newOtp = [...otp];
-
-    values.forEach((digit, i) => {
-      newOtp[i] = digit;
-    });
+    pastedData
+      .split("")
+      .forEach((digit, index) => {
+        newOtp[index] = digit;
+      });
 
     setOtp(newOtp);
+
+    // Focus last entered digit
+    const lastIndex =
+      Math.min(pastedData.length, 6) - 1;
+
+    if (lastIndex >= 0) {
+      inputRefs.current[
+        lastIndex
+      ]?.focus();
+    }
   };
 
+  // ====================
   // Verify OTP
+  // ====================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     const enteredOtp = otp.join("");
 
+    // OTP validation
     if (enteredOtp.length !== 6) {
-      return toast.error("Please enter complete OTP");
+      toast.error(
+        "Please enter complete OTP",
+      );
+      return;
+    }
+
+    // Email validation
+    if (!email) {
+      toast.error(
+        "Email is missing. Please try again.",
+      );
+
+      navigate("/forgot-password");
+      return;
     }
 
     try {
       setLoading(true);
 
-      const { data } = await axios.post(`${BASE_URL}/verify-otp`, {
+      const data = await verifyOTP({
         email,
         otp: enteredOtp,
       });
@@ -81,7 +157,19 @@ function VerifyOTP() {
 
       navigate("/reset-password");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      // Zod validation errors
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach(
+          (err) => {
+            toast.error(err.message);
+          },
+        );
+      } else {
+        toast.error(
+          error.response?.data?.message ||
+            "Something went wrong. Please try again.",
+        );
+      }
     } finally {
       setLoading(false);
     }

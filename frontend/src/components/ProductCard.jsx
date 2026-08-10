@@ -40,10 +40,10 @@ const ProductCard = ({ product, loading }) => {
           /> 
         }
       </div>
-      {loading ? <div className="p-2 space-y-2 ">
+      {loading ? <div className="p-2 space-y-3 ">
+        <Skeleton className="w-50 h-10" />
+        <Skeleton className="w-20 h-5" />
         <Skeleton className="w-50 h-8" />
-        <Skeleton className="w-50 h-4" />
-        <Skeleton className="w-50 h-4" />
       </div> :
         <div className="px-2 space-y-3">
           <div className="px-2 space-y-1">

@@ -1,15 +1,19 @@
 import express from "express";
-import "dotenv/config";
-import connectDB from "./database/db.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
+import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
-import cookieParser from "cookie-parser";
 
-import cors from "cors";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+// ====================
+// CORS
+// ====================
 
 app.use(
   cors({
@@ -18,26 +22,27 @@ app.use(
   }),
 );
 
-// middleware
+// ====================
+// Middleware
+// ====================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// ====================
+// Routes
+// ====================
+
+app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/cart", cartRoute);
 
+// ====================
+// Error Handler
+// ====================
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("Failed to connect database:", error);
-    process.exit(1);
-  }
-};
+app.use(errorHandler);
 
-startServer();
+export default app;

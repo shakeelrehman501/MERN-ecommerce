@@ -1,4 +1,3 @@
-import store from "@/redux/store";
 import api from "./axios";
 import { getAuthConfig } from "@/utils/authHeader.js";
 
@@ -7,32 +6,32 @@ import { getAuthConfig } from "@/utils/authHeader.js";
 // ====================
 
 export const register = async (payload) => {
-  const { data } = await api.post("/user/register", payload);
+  const { data } = await api.post("/auth/register", payload);
   return data;
 };
 
 export const verifyEmail = async (payload) => {
-  const { data } = await api.post("/user/verify", payload);
+  const { data } = await api.post("/auth/verify", payload);
   return data;
 };
 
 export const reVerifyEmail = async (payload) => {
-  const { data } = await api.post("/user/reverify", payload);
+  const { data } = await api.post("/auth/reverify", payload);
   return data;
 };
 
 export const login = async (payload) => {
-  const { data } = await api.post("/user/login", payload);
+  const { data } = await api.post("/auth/login", payload);
   return data;
 };
 
 export const logout = async () => {
-  const { data } = await api.post("/user/logout", {}, getAuthConfig());
+  const { data } = await api.post("/auth/logout", {}, getAuthConfig());
   return data;
 };
 
 export const refreshToken = async () => {
-  const { data } = await api.post("/user/refresh-token");
+  const { data } = await api.post("/auth/refresh-token");
   return data;
 };
 
@@ -41,39 +40,33 @@ export const refreshToken = async () => {
 // ====================
 
 export const forgotPassword = async (payload) => {
-  const { data } = await api.post("/user/forgot-password", payload);
+  const { data } = await api.post("/auth/forgot-password", payload);
   return data;
 };
 
 export const verifyOTP = async (payload) => {
-  const { data } = await api.post("/user/verify-otp", payload);
+  const { data } = await api.post("/auth/verify-otp", payload);
   return data;
 };
 
 export const resetPassword = async (payload) => {
-  const { data } = await api.post("/user/reset-password", payload);
+  const { data } = await api.post("/auth/reset-password", payload);
   return data;
 };
 
 // ====================
-// Authenticated User
+// Change Password 
 // ====================
 
 export const changePassword = async (payload) => {
   const { data } = await api.patch(
-    "/user/change-password",
+    "/auth/change-password",
     payload,
     getAuthConfig(),
   );
   return data;
 };
 
-export const updateUser = async (userId, payload) => {
-  const { data } = await api.put(`/user/update/${userId}`, payload, {
-    headers: {
-      Authorization: `Bearer ${store.getState().user.accessToken}`,
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return data;
-};
+
+
+

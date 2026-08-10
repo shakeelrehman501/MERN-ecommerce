@@ -1,15 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { setUser } from "@/redux/userSlice";
-import axios from "axios";
+
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Images } from "@/lib/constants.js";
+import {
+  getUserById,
+  updateUserApi,
+} from "@/api/userApi";
 const UserInfo = () => {
   const navigate = useNavigate();
   const [updateUser, setUpdateUser] = useState(null);
@@ -17,84 +19,89 @@ const UserInfo = () => {
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const params = useParams();
-  const dispatch = useDispatch();
+  
   const userId = params.id;
+  
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-  const handleChange = (e) => {
-    setUpdateUser({ ...updateUser, [e.target.name]: e.target.value });
-  };
+  setUpdateUser((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setUpdateUser({
-      ...updateUser,
-      profilePic: URL.createObjectURL(selectedFile),
-    }); //preview only
-    setImageLoading(true);
-  };
+const handleFileChange = (e) => {
+  const selectedFile = e.target.files?.[0];
 
-  // main function
-  const handleSubmit = async (e) => {
+  if (!selectedFile) return;
+
+  setFile(selectedFile);
+
+  setUpdateUser((prev) => ({
+    ...prev,
+    profilePic: URL.createObjectURL(selectedFile),
+  }));
+
+  setImageLoading(true);
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (loading) return;
+
+  try {
     setLoading(true);
-    e.preventDefault();
-    const accessToken = localStorage.getItem("accessToken");
+
+    const formData = new FormData();
+
+    formData.append("firstName", updateUser.firstName ?? "");
+    formData.append("lastName", updateUser.lastName ?? "");
+    formData.append("phoneNo", updateUser.phoneNo ?? "");
+    formData.append("address", updateUser.address ?? "");
+    formData.append("city", updateUser.city ?? "");
+    formData.append("zipCode", updateUser.zipCode ?? "");
+    formData.append("role", updateUser.role ?? "");
+
+    if (file) {
+      formData.append("file", file);
+    }
+
+    const data = await updateUserApi(userId, formData);
+
+    // Update only this page's form data
+    setUpdateUser(data.user);
+
+    toast.success(data.message);
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update profile",
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  const loadUserDetails = async () => {
     try {
-      // use FormData for text + file
-      const formData = new FormData();
-      formData.append("firstName", updateUser.firstName);
-      formData.append("lastName", updateUser.lastName);
-      formData.append("email", updateUser.email);
-      formData.append("phoneNo", updateUser.phoneNo);
-      formData.append("address", updateUser.address);
-      formData.append("city", updateUser.city);
-      formData.append("zipCode", updateUser.zipCode);
-      formData.append("role", updateUser.role);
+      const data = await getUserById(userId);
 
-      if (file) {
-        formData.append("file", file); // image file for backend multer
-      }
-      const res = await axios.put(
-        `http://localhost:8000/api/v1/user/update/${userId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      if (res.data.success) {
-        toast.success(res.data.message);
-        dispatch(setUser(res.data.user));
-      }
+      setUpdateUser(data.user);
     } catch (error) {
-      console.log(error.response);
-      toast.error("Failed to update profile");
-    } finally {
-      setLoading(false);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to fetch user details",
+      );
     }
   };
 
-  useEffect(() => {
-    const getUserDetails = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8000/api/v1/user/get-user/${userId}`,
-        );
-
-        if (res.data.success) {
-          setUpdateUser(res.data.user);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getUserDetails();
-  }, [userId]);
-
+  if (userId) {
+    loadUserDetails();
+  }
+}, [userId]);
   return (
     <div className="min-h-screen bg-gray-100 lg:-mt-20 xl:-mt-25 ">
       <div className="max-w-7xl mx-auto">
@@ -150,7 +157,7 @@ const UserInfo = () => {
                     type="text"
                     name="firstName"
                     placeholder="Shakeel"
-                    value={updateUser?.firstName}
+                    value={updateUser?.firstName ?? ""}
                     onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1"
                   />
@@ -161,7 +168,7 @@ const UserInfo = () => {
                     type="text"
                     name="lastName"
                     placeholder="Rehman"
-                    value={updateUser?.lastName}
+                    value={updateUser?.lastName ?? ""}
                     onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1"
                   />
@@ -173,7 +180,7 @@ const UserInfo = () => {
                   type="email"
                   name="email"
                   disabled
-                  value={updateUser?.email}
+                  value={updateUser?.email ?? ""}
                   onChange={handleChange}
                   className="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-100 cursor-not-allowed"
                 />
@@ -186,7 +193,7 @@ const UserInfo = () => {
                   type="text"
                   name="phoneNo"
                   placeholder="Enter you Contact No"
-                  value={updateUser?.phoneNo}
+                  value={updateUser?.phoneNo ?? ""}
                   onChange={handleChange}
                   className="w-full border rounded-lg px-3 py-2 mt-1 "
                 />
@@ -197,7 +204,7 @@ const UserInfo = () => {
                   type="text"
                   name="address"
                   placeholder="Enter you address"
-                  value={updateUser?.address}
+                  value={updateUser?.address ?? ""}
                   onChange={handleChange}
                   className="w-full border rounded-lg px-3 py-2 mt-1 "
                 />
@@ -209,7 +216,7 @@ const UserInfo = () => {
                     type="text"
                     name="city"
                     placeholder="Enter your city address"
-                    value={updateUser?.city}
+                    value={updateUser?.city ?? ""}
                     onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
@@ -220,7 +227,7 @@ const UserInfo = () => {
                     type="text"
                     name="zipCode"
                     placeholder="Enter your zip code"
-                    value={updateUser?.zipCode}
+                    value={updateUser?.zipCode ?? ""}
                     onChange={handleChange}
                     className="w-full border rounded-lg px-3 py-2 mt-1 "
                   />
@@ -229,7 +236,7 @@ const UserInfo = () => {
               <div className="flex gap-3 items-center">
                 <Label className="block text-sm font-medium">Role:</Label>
                 <RadioGroup
-                  value={updateUser?.role}
+                  value={updateUser?.role ?? ""}
                   onValueChange={(value) =>
                     setUpdateUser({ ...updateUser, role: value })
                   }

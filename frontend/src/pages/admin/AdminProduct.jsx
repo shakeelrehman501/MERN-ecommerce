@@ -38,118 +38,208 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ImageUpload";
 import { useState } from "react";
 import { setProducts } from "@/redux/productSlice";
-import axios from "axios";
 import { toast } from "sonner";
+import {
+  updateProduct,
+  deleteProduct,
+} from "@/api/productApi";
 
 const AdminProduct = () => {
-  const { products } = useSelector((store) => store.product);
-  const [editProduct, setEditProduct] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
-  const dispatch = useDispatch();
+ const { products } = useSelector(
+  (store) => store.product,
+);
 
-  let filteredProducts = products.filter(
-    (product) =>
-      product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase()),
+const [editProduct, setEditProduct] =
+  useState(null);
+
+const [open, setOpen] = useState(false);
+
+const [searchTerm, setSearchTerm] = useState("");
+
+const [sortOrder, setSortOrder] = useState("");
+
+const dispatch = useDispatch();
+
+
+// ====================
+// Search + Sort
+// ====================
+
+let filteredProducts = products.filter(
+  (product) =>
+    product.productName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()) ||
+    product.brand
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()) ||
+    product.category
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()),
+);
+
+if (sortOrder === "lowToHigh") {
+  filteredProducts = [...filteredProducts].sort(
+    (a, b) =>
+      a.productPrice - b.productPrice,
+  );
+}
+
+if (sortOrder === "highToLow") {
+  filteredProducts = [...filteredProducts].sort(
+    (a, b) =>
+      b.productPrice - a.productPrice,
+  );
+}
+
+
+// ====================
+// Handle Input Change
+// ====================
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setEditProduct((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
+
+// ====================
+// Update Product
+// ====================
+
+const handleSave = async (e) => {
+  e.preventDefault();
+
+  if (!editProduct?._id) {
+    toast.error("Product information is missing");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append(
+    "productName",
+    editProduct.productName,
   );
 
-  if (sortOrder === "lowToHigh") {
-    filteredProducts = [...filteredProducts].sort(
-      (a, b) => a.productPrice - b.productPrice,
+  formData.append(
+    "productDesc",
+    editProduct.productDesc,
+  );
+
+  formData.append(
+    "productPrice",
+    editProduct.productPrice,
+  );
+
+  formData.append(
+    "category",
+    editProduct.category,
+  );
+
+  formData.append(
+    "brand",
+    editProduct.brand,
+  );
+
+  // ====================
+  // Existing Images
+  // ====================
+
+  const existingImages = editProduct.productImg
+    .filter(
+      (img) =>
+        !(img instanceof File) &&
+        img.public_id,
+    )
+    .map((img) => img.public_id);
+
+  formData.append(
+    "existingImages",
+    JSON.stringify(existingImages),
+  );
+
+  // ====================
+  // New Images
+  // ====================
+
+  editProduct.productImg
+    .filter((img) => img instanceof File)
+    .forEach((file) => {
+      formData.append("files", file);
+    });
+
+  try {
+    const data = await updateProduct(
+      editProduct._id,
+      formData,
+    );
+
+    // Backend ApiResponse:
+    // data.data = updated product
+
+    const updatedProduct = data.data;
+
+    const updatedProducts = products.map(
+      (product) =>
+        product._id === editProduct._id
+          ? updatedProduct
+          : product,
+    );
+
+    dispatch(setProducts(updatedProducts));
+
+    toast.success(data.message);
+
+    setOpen(false);
+    // setEditProduct(null);
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update product",
     );
   }
-  if (sortOrder === "highToLow") {
-    filteredProducts = [...filteredProducts].sort(
-      (a, b) => b.productPrice - a.productPrice,
-    );
+};
+
+
+// ====================
+// Delete Product
+// ====================
+
+const deleteProductHandler = async (
+  productId,
+) => {
+  if (!productId) {
+    toast.error("Product ID is missing");
+    return;
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  try {
+    const data =
+      await deleteProduct(productId);
 
-    setEditProduct((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-
-    formData.append("productName", editProduct.productName);
-    formData.append("productDesc", editProduct.productDesc);
-    formData.append("productPrice", editProduct.productPrice);
-    formData.append("category", editProduct.category);
-    formData.append("brand", editProduct.brand);
-
-    // Add existing images public_ids
-    const existingImages = editProduct.productImg
-      .filter((img) => !(img instanceof File) && img.public_id)
-      .map((img) => img.public_id);
-
-    formData.append("existingImages", JSON.stringify(existingImages));
-
-    // Add new files
-    editProduct.productImg
-      .filter((img) => img instanceof File)
-      .forEach((file) => {
-        formData.append("files", file);
-      });
-
-    try {
-      const res = await axios.put(
-        `http://localhost:8000/api/v1/product/update/${editProduct._id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
+    const remainingProducts =
+      products.filter(
+        (product) =>
+          product._id !== productId,
       );
 
-      if (res.data.success) {
-        toast.success("Product updated successfully");
-        const updateProducts = products.map((p) =>
-          p._id === editProduct._id ? res.data.product : p,
-        );
-        dispatch(setProducts(updateProducts));
-        setOpen(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    dispatch(
+      setProducts(remainingProducts),
+    );
 
-  const deleteProductHandler = async (productId) => {
-    try {
-      const remainingProducts = products.filter(
-        (product) => product._id !== productId,
-      );
-
-      const res = await axios.delete(
-        `http://localhost:8000/api/v1/product/delete/${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (res.data.success) {
-        toast.success(res.data.message);
-        dispatch(setProducts(remainingProducts));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+    toast.success(data.message);
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to delete product",
+    );
+  }
+};
   return (
     <div className="px-3 md:px-6 lg:px-10 pb-10 pt-25 flex flex-col gap-3 min-h-screen bg-gray-100 lg:pl-80">
       <div className="flex justify-between gap-3">
@@ -183,9 +273,9 @@ const AdminProduct = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex gap-2 items-center">
                   <img
-                    src={product.productImg[0].url}
+                    src={product.productImg[0]?.url}
                     alt=""
-                    className="w-25 h-25"
+                    className="w-25 h-25 bg-gray-300"
                   />
 
                   <h1 className="font-bold max-w-115 line-clamp-4 wrap-break-words text-gray-700">

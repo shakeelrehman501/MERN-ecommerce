@@ -6,6 +6,7 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  authInitialized: false,
 };
 
 const userSlice = createSlice({
@@ -35,6 +36,9 @@ const userSlice = createSlice({
     updateAccessToken: (state, action) => {
       state.accessToken = action.payload;
     },
+    setAuthInitialized: (state, action) => {
+  state.authInitialized = action.payload;
+},
   },
 });
 

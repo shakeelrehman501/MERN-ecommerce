@@ -25,6 +25,7 @@ router.post(
   addProduct,
 );
 
+
 router.get("/getallproducts", getAllProduct);
 // Filters
 router.get("/filters", getProductFilters);

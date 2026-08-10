@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { reVerifyEmail } from "@/api/authApi";
+import { reVerifyEmail } from "@/api/authApi.js";
 
 function CheckEmail() {
   const [loading, setLoading] = useState(false);

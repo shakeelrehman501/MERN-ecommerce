@@ -8,17 +8,12 @@ import {
   verify,
   verifyOTP,
   changePassword,
-  allUser,
-  getUserById,
-  updateUser,
   refreshToken,
   resetPassword,
-} from "../controllers/userController.js";
-import { isAdmin, isAuthenticated } from "../middleware/isAuthenticated.js";
-import { singleUpload } from "../middleware/multer.js";
+} from "../controllers/authController.js";
+import { isAuthenticated } from "../middleware/isAuthenticated.js";
 import { validate } from "../middleware/validate.js";
 import { changePasswordSchema, forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, reVerifySchema, verifyOtpSchema, verifySchema } from "../validations/auth.validation.js";
-import { updateUserSchema } from "../validations/user.validation.js";
 
 const router = express.Router();
 
@@ -35,12 +30,6 @@ router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.post("/verify-otp", validate(verifyOtpSchema), verifyOTP);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
 router.patch("/change-password", isAuthenticated, validate(changePasswordSchema), changePassword);
-
-
-// Users
-router.get("/all-user", isAuthenticated, isAdmin, allUser);
-router.get("/get-user/:userId", getUserById);
-router.put("/update/:id", isAuthenticated, singleUpload, validate(updateUserSchema), updateUser);
 
 
 export default router;

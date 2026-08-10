@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
-import { changePassword } from "@/api/authApi";
+import { changePassword } from "@/api/authApi.js";
 
 import { Button } from "@/components/ui/button";
 import {

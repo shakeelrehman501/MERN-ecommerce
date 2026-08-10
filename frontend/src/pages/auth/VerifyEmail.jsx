@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { verifyEmail } from "@/api/authApi";
+import { verifyEmail } from "@/api/authApi.js";
 
 function VerifyEmail() {
   const { token } = useParams();

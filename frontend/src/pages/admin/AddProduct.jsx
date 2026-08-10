@@ -12,77 +12,112 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { setProducts } from "@/redux/productSlice";
-import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import { addProduct } from "@/api/productApi";
 
 const AddProduct = () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const {products} = useSelector((store)=>store.product)
-  const [productData, setProductData] = useState({
-    productName: "",
-    productPrice: 0,
-    productDesc: "",
-    productImg: [],
-    brand: "",
-    category: "",
+
+const dispatch = useDispatch();
+
+const [loading, setLoading] = useState(false);
+
+const { products } = useSelector(
+  (store) => store.product,
+);
+
+const [productData, setProductData] = useState({
+  productName: "",
+  productPrice: 0,
+  productDesc: "",
+  productImg: [],
+  brand: "",
+  category: "",
+});
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setProductData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
+
+const submitHandler = async (e) => {
+  e.preventDefault();
+
+  if (loading) return;
+
+  if (productData.productImg.length === 0) {
+    toast.error("Please select at least one image");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append(
+    "productName",
+    productData.productName,
+  );
+
+  formData.append(
+    "productPrice",
+    productData.productPrice,
+  );
+
+  formData.append(
+    "productDesc",
+    productData.productDesc,
+  );
+
+  formData.append(
+    "category",
+    productData.category,
+  );
+
+  formData.append(
+    "brand",
+    productData.brand,
+  );
+
+  productData.productImg.forEach((img) => {
+    formData.append("files", img);
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  try {
+    setLoading(true);
 
-    setProductData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const data = await addProduct(formData);
+    dispatch(
+      setProducts([
+        ...products,
+        data.data,
+      ]),
+    );
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+    toast.success(data.message);
 
-    const formData = new FormData();
-
-    formData.append("productName", productData.productName);
-    formData.append("productPrice", productData.productPrice);
-    formData.append("productDesc", productData.productDesc);
-    formData.append("category", productData.category);
-    formData.append("brand", productData.brand);
-
-    if (productData.productImg.length === 0) {
-      toast.error("Please select at least one image");
-      return;
-    }
-
-    productData.productImg.forEach((img) => {
-      formData.append("files", img);
+    // Optional: reset form
+    setProductData({
+      productName: "",
+      productPrice: 0,
+      productDesc: "",
+      productImg: [],
+      brand: "",
+      category: "",
     });
-
-    try {
-      setLoading(true);
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/product/addproduct",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (res.data.success) {
-        dispatch(setProducts([...products, res.data.product]));
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Something went wrong. Please try again.",
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className=" py-25 px-3 md:px-6 lg:px-10 mx-auto  bg-gray-100 min-h-screen lg:pl-80">

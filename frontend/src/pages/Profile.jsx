@@ -8,7 +8,9 @@ import { toast } from "sonner";
 import { setUser } from "@/redux/userSlice";
 import { Loader2 } from "lucide-react";
 import { Images } from "@/lib/constants.js";
-import { updateUser as updateUserApi } from "@/api/authApi";
+import { updateUserApi } from "@/api/userApi.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ChangePassword from "@/components/ChangePassword";
 
 function Profile() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ function Profile() {
 
   const { userId } = useParams();
 
-  const [updateUser, setUpdateUser] = useState({
+  const [updateUser, setUpdatedUser] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     email: user?.email || "",
@@ -37,7 +39,7 @@ function Profile() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setUpdateUser((prev) => ({
+    setUpdatedUser((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -50,7 +52,7 @@ function Profile() {
 
     setFile(selectedFile);
 
-    setUpdateUser((prev) => ({
+    setUpdatedUser((prev) => ({
       ...prev,
       profilePic: URL.createObjectURL(selectedFile),
     }));
@@ -134,118 +136,139 @@ function Profile() {
             </div>
 
             {/* profile form */}
-
             <div className="mt-5 sm:mt-4">
-              <h1 className="font-bold mb-3 text-center text-2xl text-gray-800 ">
-                Update Profile
+              <h1 className="font-bold mb-3 text-center text-xl text-gray-800 ">
+                Update Profile/Change Password
               </h1>
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-4 shadow-md p-5 rounded-lg bg-white"
-              >
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="block text-sm font-medium">
-                      First Name
-                    </Label>
-                    <Input
-                      type="text"
-                      name="firstName"
-                      placeholder="Shakeel"
-                      value={updateUser.firstName}
-                      onChange={handleChange}
-                      className="w-full border rounded-lg px-3 py-2 mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label className="block text-sm font-medium">
-                      Last Name
-                    </Label>
-                    <Input
-                      type="text"
-                      name="lastName"
-                      placeholder="Rehman"
-                      value={updateUser.lastName}
-                      onChange={handleChange}
-                      className="w-full border rounded-lg px-3 py-2 mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label className="block text-sm font-medium">Email</Label>
-                  <Input
-                    type="email"
-                    name="email"
-                    disabled
-                    value={updateUser.email}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-100 cursor-not-allowed"
-                  />
-                </div>
-                <div>
-                  <Label className="block text-sm font-medium">
-                    Phone Number
-                  </Label>
-                  <Input
-                    type="text"
-                    name="phoneNo"
-                    placeholder="Enter you Contact No"
-                    value={updateUser.phoneNo}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2 mt-1 "
-                  />
-                </div>
-                <div>
-                  <Label className="block text-sm font-medium">Address</Label>
-                  <Input
-                    type="text"
-                    name="address"
-                    placeholder="Enter you address"
-                    value={updateUser.address}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2 mt-1 "
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="block text-sm font-medium">City</Label>
-                    <Input
-                      type="text"
-                      name="city"
-                      placeholder="Enter your city address"
-                      value={updateUser.city}
-                      onChange={handleChange}
-                      className="w-full border rounded-lg px-3 py-2 mt-1 "
-                    />
-                  </div>
-                  <div>
-                    <Label className="block text-sm font-medium">
-                      Zip Code
-                    </Label>
-                    <Input
-                      type="text"
-                      name="zipCode"
-                      placeholder="Enter your zip code"
-                      value={updateUser.zipCode}
-                      onChange={handleChange}
-                      className="w-full border rounded-lg px-3 py-2 mt-1 "
-                    />
-                  </div>
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 rounded-lg "
+              <Tabs defaultValue="updateprofile" className="max-w-100 w-full  ">
+                <TabsList className="bg-gray-600 px-1 mx-auto ">
+                  <TabsTrigger value="updateprofile" className="text-white  ">
+                    Update Profile
+                  </TabsTrigger>
+                  <TabsTrigger value="changepassword" className="text-white">
+                    Change Password
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  value="changepassword"
+                  className="max-w-100 w-full bg-white rounded-lg"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Please wait
-                    </>
-                  ) : (
-                    "Update Profile"
-                  )}
-                </Button>
-              </form>
+                  <ChangePassword />
+                </TabsContent>
+                <TabsContent value="updateprofile">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-4 shadow-md p-5 rounded-lg bg-white"
+                  >
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="block text-sm font-medium">
+                          First Name
+                        </Label>
+                        <Input
+                          type="text"
+                          name="firstName"
+                          placeholder="Shakeel"
+                          value={updateUser.firstName ?? ""}
+                          onChange={handleChange}
+                          className="w-full border rounded-lg px-3 py-2 mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label className="block text-sm font-medium">
+                          Last Name
+                        </Label>
+                        <Input
+                          type="text"
+                          name="lastName"
+                          placeholder="Rehman"
+                          value={updateUser.lastName ?? ""}
+                          onChange={handleChange}
+                          className="w-full border rounded-lg px-3 py-2 mt-1"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="block text-sm font-medium">Email</Label>
+                      <Input
+                        type="email"
+                        name="email"
+                        disabled
+                        value={updateUser.email ?? ""}
+                        onChange={handleChange}
+                        className="w-full border rounded-lg px-3 py-2 mt-1 bg-gray-100 cursor-not-allowed"
+                      />
+                    </div>
+                    <div>
+                      <Label className="block text-sm font-medium">
+                        Phone Number
+                      </Label>
+                      <Input
+                        type="text"
+                        name="phoneNo"
+                        placeholder="Enter you Contact No"
+                        value={updateUser.phoneNo ?? ""}
+                        onChange={handleChange}
+                        className="w-full border rounded-lg px-3 py-2 mt-1 "
+                      />
+                    </div>
+                    <div>
+                      <Label className="block text-sm font-medium">
+                        Address
+                      </Label>
+                      <Input
+                        type="text"
+                        name="address"
+                        placeholder="Enter you address"
+                        value={updateUser.address ?? ""}
+                        onChange={handleChange}
+                        className="w-full border rounded-lg px-3 py-2 mt-1 "
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="block text-sm font-medium">
+                          City
+                        </Label>
+                        <Input
+                          type="text"
+                          name="city"
+                          placeholder="Enter your city address"
+                          value={updateUser.city ?? ""}
+                          onChange={handleChange}
+                          className="w-full border rounded-lg px-3 py-2 mt-1 "
+                        />
+                      </div>
+                      <div>
+                        <Label className="block text-sm font-medium">
+                          Zip Code
+                        </Label>
+                        <Input
+                          type="text"
+                          name="zipCode"
+                          placeholder="Enter your zip code"
+                          value={updateUser.zipCode ?? ""}
+                          onChange={handleChange}
+                          className="w-full border rounded-lg px-3 py-2 mt-1 "
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-5 rounded-lg "
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Please wait
+                        </>
+                      ) : (
+                        "Update Profile"
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>

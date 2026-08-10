@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { setProducts } from "@/redux/productSlice";
-import axios from "axios";
+
 import { SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,79 +24,96 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+import { getAllProducts, getProductFilters } from "@/api/productApi";
+
 function Products() {
   const { products } = useSelector((store) => store.product);
+
   const [loading, setLoading] = useState(false);
+  const [filtersLoading, setFiltersLoading] = useState(true);
+
   const [showFilterbar, setShowFilterbar] = useState(false);
+
   const [search, setSearch] = useState("");
-  // Selected Filters
+
   const [category, setCategory] = useState("All");
   const [brand, setBrand] = useState("All");
-  // Lists
+
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
 
   const [priceRange, setPriceRange] = useState([0, 9999999]);
+
   const [sortOrder, setSortOrder] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
   const dispatch = useDispatch();
 
+  // ====================
+  // Get All Products
+  // ====================
+
   useEffect(() => {
-    const getAllProducts = async () => {
+    const loadProducts = async () => {
       try {
         setLoading(true);
 
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/product/getallproducts",
-          {
-            params: {
-              page: currentPage,
-              limit: 8,
-              search,
-              category,
-              brand,
-              minPrice: priceRange[0],
-              maxPrice: priceRange[1],
-              sort: sortOrder,
-            },
-          },
-        );
+        const data = await getAllProducts({
+          page: currentPage,
+          limit: 8,
+          search,
+          category,
+          brand,
+          minPrice: priceRange[0],
+          maxPrice: priceRange[1],
+          sort: sortOrder,
+        });
+        dispatch(setProducts(data.data.products));
 
-        if (res.data.success) {
-          dispatch(setProducts(res.data.products));
-          setTotalPages(res.data.totalPages);
-        }
+        setTotalPages(data.data.totalPages);
       } catch (error) {
-        console.log(error);
-        toast.error(error.response?.data?.message || "Something went wrong");
+        toast.error(
+          error.response?.data?.message || "Failed to fetch products",
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    getAllProducts();
+    loadProducts();
   }, [dispatch, currentPage, search, category, brand, sortOrder, priceRange]);
 
-  useEffect(() => {
-    const getFilters = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/product/filters",
-        );
+  // ====================
+  // Get Product Filters
+  // ====================
 
-        if (res.data.success) {
-          setCategories(["All", ...res.data.categories]);
-          setBrands(["All", ...res.data.brands]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+ useEffect(() => {
+  const loadFilters = async () => {
+    try {
+      setFiltersLoading(true);
 
-    getFilters();
-  }, []);
+      const data = await getProductFilters();
+
+      setCategories(["All", ...data.data.categories]);
+      setBrands(["All", ...data.data.brands]);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to fetch product filters",
+      );
+    } finally {
+      setFiltersLoading(false);
+    }
+  };
+
+  loadFilters();
+}, []);
+
+  // ====================
+  // Reset Filters
+  // ====================
 
   const resetFilters = () => {
     setSearch("");
@@ -106,7 +123,6 @@ function Products() {
     setSortOrder("");
     setCurrentPage(1);
   };
-
   return (
     <div className="pt-25 pb-10 px-5 flex w-full max-w-7xl mx-auto gap-7   relative">
       {/* Desktop Side filterbar */}
@@ -122,7 +138,7 @@ function Products() {
           brands={brands}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
-          loading={loading}
+          loading={filtersLoading}
           setCurrentPage={setCurrentPage}
           resetFilters={resetFilters}
         />
@@ -148,7 +164,7 @@ function Products() {
               brands={brands}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
-              loading={loading}
+              loading={filtersLoading}
               setCurrentPage={setCurrentPage}
               resetFilters={resetFilters}
             />
@@ -196,7 +212,8 @@ function Products() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {products.map((product) => (
+
+            {products?.map((product) => (
               <ProductCard
                 key={product._id}
                 product={product}
