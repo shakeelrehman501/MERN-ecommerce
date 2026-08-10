@@ -8,19 +8,8 @@ import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 
 import { errorHandler } from "./middleware/errorHandler.js";
-import connectDB from "./database/db.js";
-
 
 const app = express();
-
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 
 // ====================
 // CORS
