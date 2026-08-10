@@ -8,8 +8,22 @@ import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 
 import { errorHandler } from "./middleware/errorHandler.js";
+// for vercel
+import connectDB from "./database/db.js";
+
 
 const app = express();
+
+
+// for vercel
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 // ====================
 // CORS
