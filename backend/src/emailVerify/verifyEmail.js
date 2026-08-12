@@ -13,16 +13,22 @@ export const verifyEmail = async (token, email) => {
       html: `
         <h2>Email Verification</h2>
 
-        <p>Please click the link below to verify your email:</p>
+        <p>Please click the button below to verify your email:</p>
 
         <p>
-          <a href="${verificationUrl}">
+          <a href="${verificationUrl}"
+            style="
+            display:inline-block;
+            padding:12px 24px;
+            background:#2563eb;
+            color:#ffffff;
+            text-decoration:none;
+            border-radius:6px;
+            font-weight:bold;">
             Verify Your Email
           </a>
         </p>
-
         <br>
-
         <p>Thanks!</p>
       `,
     };
@@ -35,35 +41,3 @@ export const verifyEmail = async (token, email) => {
     throw error;
   }
 };
-
-// import nodemailer from "nodemailer";
-// import "dotenv/config";
-// export const verifyEmail = (token, email) => {
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.MAIL_USER,
-//       pass: process.env.MAIL_PASS,
-//     },
-//   });
-//   const mailOptions = {
-//     from: process.env.MAIL_USER,
-//     to: email,
-//     subject: "Email Verification",
-//   html: `
-//     <h2>Email Verification</h2>
-//     <p>Please click the link below to verify your email:</p>
-//     <p>http://localhost:5173/verify/${token}</p>
-
-//     <br>
-//     <p>Thanks!</p>
-//   `,
-//   };
-
-//   transporter.sendMail(mailOptions, function (error, response) {
-//     if (error) throw error;
-//     // console.log("Email Sent");
-//     // console.log(response);
-//   });
-// };
-
