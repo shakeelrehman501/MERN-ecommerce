@@ -47,7 +47,11 @@ function CheckEmail() {
 
           <p className="text-gray-500 text-sm">
             We've sent you an email to verify your account. Please check your
-            inbox and click the verification link.
+            inbox. If you don't receive the email, check your{" "}
+            <strong className="font-extrabold text-gray-700">
+              Spam folder and click the verification button
+            </strong>
+            .
           </p>
 
           {email && (
