@@ -89,7 +89,7 @@ function Login() {
                 <strong>Email:</strong> shakeeldeveloper501@gmail.com
               </p>
               <p>
-                <strong>Password:</strong> 12345
+                <strong>Password:</strong> Admin@12345
               </p>
             </div>
           </div>
