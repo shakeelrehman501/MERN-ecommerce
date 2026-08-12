@@ -162,7 +162,9 @@ function Navbar() {
                       Logout
                     </Button>
                   ) : (
-                    <Button className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-lg px-4 py-4.5">
+                    <Button
+                    onClick={() => navigate("/login")}
+                    className="bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-lg px-4 py-4.5">
                       Login
                     </Button>
                   )}
