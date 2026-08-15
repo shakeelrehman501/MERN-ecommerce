@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 const ProductCard = ({ product, loading }) => {
   const { productImg, productPrice, productName } = product;
   
-  const dispatch = useDispatch();
   const navigate = useNavigate()
+  const dispatch = useDispatch();
 
   const handleAddToCart = async (productId) => {
   try {

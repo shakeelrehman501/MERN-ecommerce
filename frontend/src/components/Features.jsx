@@ -1,10 +1,10 @@
-import { Headphones, Shield, Truck } from "lucide-react"
+import { Headphones, RotateCcw, Shield, Truck } from "lucide-react"
 
 function Features() {
   return (
-    <section className="py-12 bg-muted/50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+    <section className="py-12 bg-muted/50 pl-4 sm:pl-0 sm:px-6 px-2">
+      <div className="max-w-7xl mx-auto ">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           
           {/* Free Shipping */}
           <div className="flex items-center space-x-4">
@@ -35,8 +35,21 @@ function Features() {
             </div>
             <div>
               <h3 className="font-semibold">24/7 Support</h3>
-              {/* Note: Image niche se thodi cut hai, lekin design ke mutabik yahan description text aayega */}
               <p className="text-muted-foreground">Dedicated support</p> 
+            </div>
+          </div>
+
+          {/* Easy Returns */}
+          <div className="flex items-center space-x-4">
+            <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center">
+              <RotateCcw className="h-6 w-6 text-orange-600" />
+            </div>
+
+            <div>
+              <h3 className="font-semibold">Easy Returns</h3>
+              <p className="text-muted-foreground">
+                Hassle-free returns
+              </p>
             </div>
           </div>
 

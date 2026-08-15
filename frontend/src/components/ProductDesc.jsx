@@ -3,31 +3,24 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { setCart } from "@/redux/productSlice";
 import { useDispatch } from "react-redux";
-import axios from "axios";
+import { addToCart } from "@/api/cartApi";
 
 const ProductDesc = ({ product }) => {
-  const accessToken = localStorage.getItem("accessToken");
 
   const dispatch = useDispatch();
-
-  const addToCart = async (productId) => {
+  
+    const handleAddToCart = async (productId) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/cart/add",
-        { productId },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (res.data.success) {
-        toast.success("Product added to cart");
-        dispatch(setCart(res.data.cart));
-      }
+      const data = await addToCart({ productId });
+  
+      toast.success(data.message);
+  
+      dispatch(setCart(data.cart));
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
     }
   };
   return (
@@ -40,7 +33,7 @@ const ProductDesc = ({ product }) => {
         {product.category} | {product.brand}
       </p>
 
-      <h2 className="text-pink-500 font-bold text-2xl">
+      <h2 className="text-blue-600 font-bold text-2xl">
         ₹{product.productPrice}
       </h2>
 
@@ -55,8 +48,8 @@ const ProductDesc = ({ product }) => {
       </div>
 
       <Button
-      onClick={()=>addToCart(product._id)}
-      className="bg-pink-600 w-max">Add to Cart</Button>
+      onClick={()=>handleAddToCart(product._id)}
+      className="bg-blue-600 hover:bg-blue-700 w-max px-5 py-5 cursor-pointer">Add to Cart</Button>
     </div>
   );
 };
